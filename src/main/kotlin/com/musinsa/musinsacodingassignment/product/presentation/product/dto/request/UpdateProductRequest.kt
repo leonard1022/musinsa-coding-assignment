@@ -1,4 +1,4 @@
-package com.musinsa.musinsacodingassignment.product.presentation.dto.request
+package com.musinsa.musinsacodingassignment.product.presentation.product.dto.request
 
 import com.musinsa.musinsacodingassignment.product.domain.Product
 

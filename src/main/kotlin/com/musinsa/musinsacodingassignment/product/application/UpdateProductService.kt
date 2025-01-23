@@ -7,7 +7,7 @@ import com.musinsa.musinsacodingassignment.product.domain.Product
 import com.musinsa.musinsacodingassignment.product.domain.toDomain
 import com.musinsa.musinsacodingassignment.product.domain.toEntity
 import com.musinsa.musinsacodingassignment.product.exception.ProductException
-import com.musinsa.musinsacodingassignment.product.presentation.dto.request.UpdateProductRequest
+import com.musinsa.musinsacodingassignment.product.presentation.product.dto.request.UpdateProductRequest
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
