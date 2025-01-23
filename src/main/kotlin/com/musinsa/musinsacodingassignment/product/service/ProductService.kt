@@ -16,7 +16,7 @@ class ProductService(
         }
     }
 
-    fun deleteProduct(id: Long): Int {
-        return productRepository.deleteProductEntity(id, LocalDateTime.now())
+    fun deleteProduct(id: Long) {
+        productRepository.deleteProductEntity(id, LocalDateTime.now())
     }
 }

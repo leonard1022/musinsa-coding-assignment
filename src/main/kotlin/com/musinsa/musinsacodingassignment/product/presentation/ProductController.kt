@@ -12,6 +12,7 @@ import com.musinsa.musinsacodingassignment.product.presentation.dto.response.Upd
 import com.musinsa.musinsacodingassignment.product.presentation.dto.response.toCreateProductResponse
 import com.musinsa.musinsacodingassignment.product.presentation.dto.response.toUpdateProductResponse
 import com.musinsa.musinsacodingassignment.product.service.ProductService
+import org.apache.coyote.Response
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -54,7 +55,8 @@ class ProductController(
     @DeleteMapping("/products/{id}")
     fun deleteProduct(
         @PathVariable id: Long
-    ): ResponseEntity<Int> {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.deleteProduct(id))
+    ): ResponseEntity<Response> {
+        productService.deleteProduct(id)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }
