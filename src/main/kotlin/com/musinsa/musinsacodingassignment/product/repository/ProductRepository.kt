@@ -17,6 +17,6 @@ interface ProductRepository : JpaRepository<ProductEntity, Long> {
     @Query("UPDATE ProductEntity p SET p.deletedAt = :deletedAt WHERE p.id = :id")
     fun deleteProductEntity(id: Long, deletedAt: LocalDateTime? = LocalDateTime.now()): Int
 
-    fun findALlByCategoryAndDeletedAtIsNull(categoryEntity: CategoryEntity): List<ProductEntity>
+    fun findAllByCategoryAndDeletedAtIsNull(categoryEntity: CategoryEntity): List<ProductEntity>
 
 }
