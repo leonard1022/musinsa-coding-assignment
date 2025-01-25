@@ -31,7 +31,7 @@ class BrandService(
     }
 
     fun getBrands(): List<Brand> {
-        return brandRepository.findAll().map { it.toDomain() }
+        return brandRepository.findAllByDeletedAtIsNull().map { it.toDomain() }
     }
 
     fun updateBrand(id: Long, request: UpdateBrandRequest): Brand {
