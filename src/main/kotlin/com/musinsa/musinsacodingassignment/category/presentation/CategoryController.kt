@@ -27,13 +27,13 @@ class CategoryController(
     }
 
     @GetMapping("/categories")
-    fun getBrands(): ResponseEntity<List<Category>> {
+    fun getCategories(): ResponseEntity<List<Category>> {
         return ResponseEntity.status(HttpStatus.OK)
             .body(categoryService.getCategories())
     }
 
     @PatchMapping("/categories/{id}")
-    fun updateBrand(
+    fun updateCategory(
         @PathVariable id: Long,
         @RequestBody request: UpdateCategoryRequest
     ): ResponseEntity<UpdateCategoryResponse> {
