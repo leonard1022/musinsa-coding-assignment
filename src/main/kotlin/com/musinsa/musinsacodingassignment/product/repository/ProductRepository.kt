@@ -1,5 +1,6 @@
 package com.musinsa.musinsacodingassignment.product.repository
 
+import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
 import com.musinsa.musinsacodingassignment.brand.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.category.domain.Category
 import com.musinsa.musinsacodingassignment.product.entity.ProductEntity
@@ -18,5 +19,7 @@ interface ProductRepository : JpaRepository<ProductEntity, Long> {
     fun deleteProductEntity(id: Long, deletedAt: LocalDateTime? = LocalDateTime.now()): Int
 
     fun findAllByCategoryAndDeletedAtIsNull(categoryEntity: CategoryEntity): List<ProductEntity>
+
+    fun findAllByBrandAndCategoryAndDeletedAtIsNull(brandEntity: BrandEntity, categoryEntity: CategoryEntity): List<ProductEntity>
 
 }
