@@ -40,4 +40,12 @@ class BrandController(
         return ResponseEntity.status(HttpStatus.OK)
             .body(brandService.updateBrand(id, request).toUpdateBrandResponse())
     }
+
+    @DeleteMapping("/brands/{id}")
+    fun deleteBrand(
+        @PathVariable id: Long
+    ): ResponseEntity<Unit> {
+        brandService.deleteBrand(id)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
 }

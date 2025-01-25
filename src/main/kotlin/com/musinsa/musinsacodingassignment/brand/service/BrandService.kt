@@ -12,6 +12,7 @@ import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BrandService(
@@ -22,6 +23,7 @@ class BrandService(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
+    @Transactional
     fun createBrand(request: CreateBrandRequest): Brand {
         validateBrandName(request.name)
         checkBrandExistsByName(request.name)
@@ -34,6 +36,7 @@ class BrandService(
         return brandRepository.findAllByDeletedAtIsNull().map { it.toDomain() }
     }
 
+    @Transactional
     fun updateBrand(id: Long, request: UpdateBrandRequest): Brand {
         brandRepository.findById(id)
             .orElseThrow { BrandException(BrandErrorCode.BRAND_NOT_FOUND) }
@@ -43,6 +46,13 @@ class BrandService(
 
         val updatedBrand = request.toBrand(id)
         return saveBrand(updatedBrand)
+    }
+
+    @Transactional
+    fun deleteBrand(id: Long) {
+        val brand = brandRepository.findById(id)
+            .orElseThrow { BrandException(BrandErrorCode.BRAND_NOT_FOUND) }
+        brandRepository.deleteBrandEntity(brand.id)
     }
 
     private fun validateBrandName(name: String) {
