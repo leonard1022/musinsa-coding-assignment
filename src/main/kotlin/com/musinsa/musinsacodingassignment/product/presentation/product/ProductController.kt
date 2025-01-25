@@ -1,16 +1,16 @@
-package com.musinsa.musinsacodingassignment.product.presentation
+package com.musinsa.musinsacodingassignment.product.presentation.product
 
 import com.musinsa.musinsacodingassignment.common.presentation.V1Controller
 import com.musinsa.musinsacodingassignment.product.application.CreateProductService
 import com.musinsa.musinsacodingassignment.product.application.UpdateProductService
-import com.musinsa.musinsacodingassignment.product.presentation.dto.request.CreateProductRequest
-import com.musinsa.musinsacodingassignment.product.presentation.dto.request.InquiryProductResponse
-import com.musinsa.musinsacodingassignment.product.presentation.dto.request.UpdateProductRequest
-import com.musinsa.musinsacodingassignment.product.presentation.dto.request.toInquiryProductResponse
-import com.musinsa.musinsacodingassignment.product.presentation.dto.response.CreateProductResponse
-import com.musinsa.musinsacodingassignment.product.presentation.dto.response.UpdateProductResponse
-import com.musinsa.musinsacodingassignment.product.presentation.dto.response.toCreateProductResponse
-import com.musinsa.musinsacodingassignment.product.presentation.dto.response.toUpdateProductResponse
+import com.musinsa.musinsacodingassignment.product.presentation.product.dto.request.CreateProductRequest
+import com.musinsa.musinsacodingassignment.product.presentation.product.dto.request.InquiryProductResponse
+import com.musinsa.musinsacodingassignment.product.presentation.product.dto.request.UpdateProductRequest
+import com.musinsa.musinsacodingassignment.product.presentation.product.dto.request.toInquiryProductResponse
+import com.musinsa.musinsacodingassignment.product.presentation.product.dto.response.CreateProductResponse
+import com.musinsa.musinsacodingassignment.product.presentation.product.dto.response.UpdateProductResponse
+import com.musinsa.musinsacodingassignment.product.presentation.product.dto.response.toCreateProductResponse
+import com.musinsa.musinsacodingassignment.product.presentation.product.dto.response.toUpdateProductResponse
 import com.musinsa.musinsacodingassignment.product.service.ProductService
 import org.apache.coyote.Response
 import org.slf4j.LoggerFactory
