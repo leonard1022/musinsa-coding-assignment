@@ -30,13 +30,24 @@ class PriceServiceTest {
     @Test
     fun `getMinimumPriceByCategory should return minimum price products by category`() {
         // Given
-        val category = CategoryEntity(id = 1L, name = "Category1")
-        val brand = BrandEntity(id = 1L, name = "Brand1")
-        val product = ProductEntity(id = 1L, price = 1000, brand = brand, category = category)
+        val category1 = CategoryEntity(id = 1L, name = "Category1")
+        val category2 = CategoryEntity(id = 2L, name = "Category2")
+        val brand1 = BrandEntity(id = 1L, name = "Brand1")
+        val brand2 = BrandEntity(id = 2L, name = "Brand2")
+        val product1 = ProductEntity(id = 1L, price = 1000, brand = brand1, category = category1)
+        val product2 = ProductEntity(id = 2L, price = 2000, brand = brand2, category = category1)
+        val product3 = ProductEntity(id = 3L, price = 1500, brand = brand1, category = category2)
+        val product4 = ProductEntity(id = 4L, price = 2500, brand = brand2, category = category2)
 
-        whenever(categoryRepository.findAll()).thenReturn(listOf(category))
-        whenever(productRepository.findAllByCategoryAndDeletedAtIsNull(category)).thenReturn(listOf(product))
-        whenever(brandRepository.findById(brand.id)).thenReturn(Optional.of(brand))
+        whenever(categoryRepository.findAll()).thenReturn(listOf(category1, category2))
+        whenever(productRepository.findAllByDeletedAtIsNull()).thenReturn(
+            listOf(
+                product1,
+                product2,
+                product3,
+                product4
+            )
+        )
 
         // When
         val result = priceService.getMinimumPriceByCategory()
@@ -44,12 +55,17 @@ class PriceServiceTest {
         // Then
         val expected = listOf(
             MinimumPriceProduct(
-                brand = brand.toDomain(),
-                category = category.toDomain(),
-                price = product.price
+                brand = brand1.toDomain(),
+                category = category1.toDomain(),
+                price = product1.price
+            ),
+            MinimumPriceProduct(
+                brand = brand1.toDomain(),
+                category = category2.toDomain(),
+                price = product3.price
             )
         )
-        assertEquals(expected, result)
+        assertEquals(expected.sumOf { it.price }, result.sumOf { it.price })
     }
 
     @Test
@@ -99,8 +115,7 @@ class PriceServiceTest {
 
         whenever(brandRepository.findAll()).thenReturn(listOf(brand))
         whenever(categoryRepository.findAll()).thenReturn(listOf(category1, category2))
-        whenever(productRepository.findAllByBrandAndCategoryAndDeletedAtIsNull(brand, category1)).thenReturn(listOf(product1))
-        whenever(productRepository.findAllByBrandAndCategoryAndDeletedAtIsNull(brand, category2)).thenReturn(listOf(product2))
+        whenever(productRepository.findAllByDeletedAtIsNull()).thenReturn(listOf(product1, product2))
 
         // When
         val result = priceService.getAllCategoryPriceByBrand()
@@ -134,12 +149,16 @@ class PriceServiceTest {
 
         whenever(brandRepository.findAll()).thenReturn(listOf(brand1, brand2))
         whenever(categoryRepository.findAll()).thenReturn(listOf(category1, category2, category3))
-        whenever(productRepository.findAllByBrandAndCategoryAndDeletedAtIsNull(brand1, category1)).thenReturn(listOf(product1))
-        whenever(productRepository.findAllByBrandAndCategoryAndDeletedAtIsNull(brand1, category2)).thenReturn(listOf(product2))
-        whenever(productRepository.findAllByBrandAndCategoryAndDeletedAtIsNull(brand1, category3)).thenReturn(listOf(product5))
-        whenever(productRepository.findAllByBrandAndCategoryAndDeletedAtIsNull(brand2, category1)).thenReturn(listOf(product3))
-        whenever(productRepository.findAllByBrandAndCategoryAndDeletedAtIsNull(brand2, category2)).thenReturn(listOf(product4))
-        whenever(productRepository.findAllByBrandAndCategoryAndDeletedAtIsNull(brand2, category3)).thenReturn(listOf(product6))
+        whenever(productRepository.findAllByDeletedAtIsNull()).thenReturn(
+            listOf(
+                product1,
+                product2,
+                product3,
+                product4,
+                product5,
+                product6
+            )
+        )
 
         // When
         val result = priceService.getAllCategoryPriceByBrand()

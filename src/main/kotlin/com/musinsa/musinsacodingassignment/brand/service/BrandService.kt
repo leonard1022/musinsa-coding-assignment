@@ -12,6 +12,7 @@ import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BrandService(
@@ -22,47 +23,56 @@ class BrandService(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
+    @Transactional
     fun createBrand(request: CreateBrandRequest): Brand {
-        if (request.name.isBlank()) {
-            throw BrandException(BrandErrorCode.BRAND_NAME_IS_REQUIRED)
-        }
-
-        brandRepository.findByName(request.name)?.let {
-            throw BrandException(BrandErrorCode.BRAND_ALREADY_EXISTS)
-        }
+        validateBrandName(request.name)
+        checkBrandExistsByName(request.name)
 
         val brand = request.toBrand()
-        try {
-            val entity = brandRepository.save(brand.toEntity())
-            return entity.toDomain()
-        } catch (ex: DataIntegrityViolationException) {
-            throw BrandException(BrandErrorCode.BRAND_DUPLICATED)
-        }
+        return saveBrand(brand)
     }
 
     fun getBrands(): List<Brand> {
-        return brandRepository.findAll().map { it.toDomain() }
+        return brandRepository.findAllByDeletedAtIsNull().map { it.toDomain() }
     }
 
+    @Transactional
     fun updateBrand(id: Long, request: UpdateBrandRequest): Brand {
         brandRepository.findById(id)
             .orElseThrow { BrandException(BrandErrorCode.BRAND_NOT_FOUND) }
 
-        request.toBrand(id).let {
-            if (it.name.isBlank()) {
-                throw BrandException(BrandErrorCode.BRAND_NAME_IS_REQUIRED)
-            }
+        validateBrandName(request.name)
+        checkBrandExistsByName(request.name)
 
-            brandRepository.findByName(it.name)?.let {
-                throw BrandException(BrandErrorCode.BRAND_ALREADY_EXISTS)
-            }
+        val updatedBrand = request.toBrand(id)
+        return saveBrand(updatedBrand)
+    }
 
-            try {
-                val updatedEntity = brandRepository.save(it.toEntity())
-                return updatedEntity.toDomain()
-            } catch (ex: DataIntegrityViolationException) {
-                throw BrandException(BrandErrorCode.BRAND_DUPLICATED)
-            }
+    @Transactional
+    fun deleteBrand(id: Long) {
+        val brand = brandRepository.findById(id)
+            .orElseThrow { BrandException(BrandErrorCode.BRAND_NOT_FOUND) }
+        brandRepository.deleteBrandEntity(brand.id)
+    }
+
+    private fun validateBrandName(name: String) {
+        if (name.isBlank()) {
+            throw BrandException(BrandErrorCode.BRAND_NAME_IS_REQUIRED)
+        }
+    }
+
+    private fun checkBrandExistsByName(name: String) {
+        brandRepository.findByName(name)?.let {
+            throw BrandException(BrandErrorCode.BRAND_ALREADY_EXISTS)
+        }
+    }
+
+    private fun saveBrand(brand: Brand): Brand {
+        return try {
+            val entity = brandRepository.save(brand.toEntity())
+            entity.toDomain()
+        } catch (ex: DataIntegrityViolationException) {
+            throw BrandException(BrandErrorCode.BRAND_DUPLICATED)
         }
     }
 }

@@ -19,7 +19,9 @@ class BrandController(
 ) : V1Controller() {
 
     @PostMapping("/brands")
-    fun createBrand(request: CreateBrandRequest): ResponseEntity<CreateBrandResponse> {
+    fun createBrand(
+        @RequestBody request: CreateBrandRequest
+    ): ResponseEntity<CreateBrandResponse> {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(brandService.createBrand(request).toCreateBrandResponse())
     }
@@ -37,5 +39,13 @@ class BrandController(
     ): ResponseEntity<UpdateBrandResponse> {
         return ResponseEntity.status(HttpStatus.OK)
             .body(brandService.updateBrand(id, request).toUpdateBrandResponse())
+    }
+
+    @DeleteMapping("/brands/{id}")
+    fun deleteBrand(
+        @PathVariable id: Long
+    ): ResponseEntity<Unit> {
+        brandService.deleteBrand(id)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }

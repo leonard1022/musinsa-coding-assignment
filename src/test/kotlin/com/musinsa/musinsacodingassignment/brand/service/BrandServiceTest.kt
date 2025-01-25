@@ -22,7 +22,7 @@ import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class BrandEntityServiceTest {
+class BrandServiceTest {
     @Mock
     private lateinit var brandRepository: BrandRepository
 
@@ -81,7 +81,7 @@ class BrandEntityServiceTest {
             BrandEntity(name = "Brand 1"),
             BrandEntity(name = "Brand 2")
         )
-        whenever(brandRepository.findAll()).thenReturn(brandEntities)
+        whenever(brandRepository.findAllByDeletedAtIsNull()).thenReturn(brandEntities)
 
         // When
         val result = brandService.getBrands()
