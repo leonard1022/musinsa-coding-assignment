@@ -19,7 +19,9 @@ class BrandController(
 ) : V1Controller() {
 
     @PostMapping("/brands")
-    fun createBrand(request: CreateBrandRequest): ResponseEntity<CreateBrandResponse> {
+    fun createBrand(
+        @RequestBody request: CreateBrandRequest
+    ): ResponseEntity<CreateBrandResponse> {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(brandService.createBrand(request).toCreateBrandResponse())
     }
