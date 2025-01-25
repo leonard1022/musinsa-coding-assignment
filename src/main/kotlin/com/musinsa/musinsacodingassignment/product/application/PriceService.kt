@@ -1,6 +1,8 @@
 package com.musinsa.musinsacodingassignment.product.application
 
 import com.musinsa.musinsacodingassignment.brand.domain.toDomain
+import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
+import com.musinsa.musinsacodingassignment.brand.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.category.domain.toDomain
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
@@ -23,18 +25,16 @@ class PriceService(
 
     fun getMinimumPriceByCategory(): List<MinimumPriceProduct> {
         val categoryEntities = categoryRepository.findAll()
+        val allProducts = productRepository.findAllByDeletedAtIsNull()
         val results = mutableListOf<MinimumPriceProduct>()
 
         categoryEntities.forEach { categoryEntity ->
-            val products = productRepository.findAllByCategoryAndDeletedAtIsNull(categoryEntity)
+            val products = allProducts.filter { it.category == categoryEntity }
             val minPriceProduct = products.minByOrNull { it.price }
             minPriceProduct?.let { product ->
-                val brandEntity = brandRepository.findById(product.brand.id).orElseThrow {
-                    ProductException(ProductErrorCode.BRAND_NOT_FOUND)
-                }
                 results.add(
                     MinimumPriceProduct(
-                        brand = brandEntity.toDomain(),
+                        brand = product.brand.toDomain(),
                         category = categoryEntity.toDomain(),
                         price = product.price
                     )
@@ -44,6 +44,7 @@ class PriceService(
 
         return results
     }
+
 
     fun getMinimumAndMaximumBrandPrice(categoryName: String): CategoryPriceRange {
         val categoryEntity = categoryRepository.findByName(categoryName)
@@ -76,29 +77,14 @@ class PriceService(
     fun getAllCategoryPriceByBrand(): AllCategoryPriceByBrand {
         val brandEntities = brandRepository.findAll()
         val categoryEntities = categoryRepository.findAll()
-
+        val allProducts = productRepository.findAllByDeletedAtIsNull()
 
         var resultBrandEntity = brandEntities.first()
         var resultPrice = Int.MAX_VALUE
         var resultProductEntities = mutableListOf<ProductEntity>()
 
         brandEntities.forEach { brandEntity ->
-
-            var totalCategoryPrice = 0
-            val totalCategoryProductEntities = mutableListOf<ProductEntity>()
-            categoryEntities.forEach { categoryEntity ->
-                val products =
-                    productRepository.findAllByBrandAndCategoryAndDeletedAtIsNull(brandEntity, categoryEntity)
-
-                products.isEmpty() && return@forEach
-
-                val minPrice = products.minOf { it.price }
-                val minPriceProductEntities = products.filter { it.price == minPrice }
-
-                totalCategoryPrice += minPrice
-                totalCategoryProductEntities.add(minPriceProductEntities.first())
-            }
-
+            val (totalCategoryPrice, totalCategoryProductEntities) = calculateTotalCategoryPrice(brandEntity, categoryEntities, allProducts)
             if (totalCategoryPrice != 0 && totalCategoryPrice < resultPrice) {
                 resultBrandEntity = brandEntity
                 resultPrice = totalCategoryPrice
@@ -116,5 +102,26 @@ class PriceService(
                 )
             }
         )
+    }
+
+    private fun calculateTotalCategoryPrice(
+        brandEntity: BrandEntity,
+        categoryEntities: List<CategoryEntity>,
+        allProducts: List<ProductEntity>
+    ): Pair<Int, MutableList<ProductEntity>> {
+        var totalCategoryPrice = 0
+        val totalCategoryProductEntities = mutableListOf<ProductEntity>()
+
+        categoryEntities.forEach { categoryEntity ->
+            val products = allProducts.filter { it.brand == brandEntity && it.category == categoryEntity }
+            if (products.isNotEmpty()) {
+                val minPrice = products.minOf { it.price }
+                val minPriceProductEntities = products.filter { it.price == minPrice }
+                totalCategoryPrice += minPrice
+                totalCategoryProductEntities.add(minPriceProductEntities.first())
+            }
+        }
+
+        return Pair(totalCategoryPrice, totalCategoryProductEntities)
     }
 }
