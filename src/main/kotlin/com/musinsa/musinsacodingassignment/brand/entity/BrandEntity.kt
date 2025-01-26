@@ -1,7 +1,7 @@
 package com.musinsa.musinsacodingassignment.brand.entity
 
 import com.musinsa.musinsacodingassignment.brand.domain.Brand
-import com.musinsa.musinsacodingassignment.common.domain.BaseEntity
+import com.musinsa.musinsacodingassignment.common.entity.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
