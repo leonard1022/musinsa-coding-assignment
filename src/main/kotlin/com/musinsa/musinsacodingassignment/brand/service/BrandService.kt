@@ -1,8 +1,6 @@
 package com.musinsa.musinsacodingassignment.brand.service
 
-import com.musinsa.musinsacodingassignment.brand.domain.Brand
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
-import com.musinsa.musinsacodingassignment.brand.entity.toDomain
 import com.musinsa.musinsacodingassignment.brand.entity.toVO
 import com.musinsa.musinsacodingassignment.brand.exception.BrandErrorCode
 import com.musinsa.musinsacodingassignment.brand.exception.BrandException
