@@ -3,11 +3,11 @@ package com.musinsa.musinsacodingassignment.category.service
 import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.category.code.CategoryErrorCode
 import com.musinsa.musinsacodingassignment.category.domain.Category
-import com.musinsa.musinsacodingassignment.category.domain.toEntity
+import com.musinsa.musinsacodingassignment.category.entity.toEntity
 import com.musinsa.musinsacodingassignment.category.exception.CategoryException
 import com.musinsa.musinsacodingassignment.category.presentation.dto.request.CreateCategoryRequest
 import com.musinsa.musinsacodingassignment.category.presentation.dto.request.UpdateCategoryRequest
-import com.musinsa.musinsacodingassignment.category.presentation.dto.request.toCategory
+import com.musinsa.musinsacodingassignment.category.presentation.dto.request.toDomain
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -36,7 +36,7 @@ class CategoryServiceTest {
     fun `createCategory should create and return category`() {
         // Given
         val request = CreateCategoryRequest(name = "New Category")
-        val category = request.toCategory()
+        val category = request.toDomain()
 
         val categoryEntity = category.toEntity()
         whenever(categoryRepository.findByName(request.name)).thenReturn(null)
@@ -69,7 +69,7 @@ class CategoryServiceTest {
             id = 0,
             name = "Existing Category"
         ).toEntity()
-        whenever(categoryRepository.findByName(request.name)).thenReturn(existingCategoryEntity)
+        whenever(categoryRepository.existsByName(request.name)).thenReturn(true)
 
         // When & Then
         val exception = assertThrows<CategoryException> {
@@ -107,7 +107,7 @@ class CategoryServiceTest {
         // Given
         val id = 1L
         val request = UpdateCategoryRequest(name = "Updated Category")
-        val category = request.toCategory(id)
+        val category = request.toDomain(id)
         val existingCategoryEntity = category.toEntity().apply { this.id = id }
         val updatedCategoryEntity = category.toEntity().apply { this.id = id }
         whenever(categoryRepository.findById(id)).thenReturn(Optional.of(existingCategoryEntity))
@@ -141,7 +141,7 @@ class CategoryServiceTest {
         // Given
         val id = 1L
         val request = UpdateCategoryRequest(name = "")
-        val category = request.toCategory(id)
+        val category = request.toDomain(id)
         val existingCategoryEntity = category.toEntity().apply { this.id = id }
         whenever(categoryRepository.findById(id)).thenReturn(Optional.of(existingCategoryEntity))
 
@@ -159,11 +159,10 @@ class CategoryServiceTest {
         // Given
         val id = 1L
         val request = UpdateCategoryRequest(name = "Existing Category")
-        val category = request.toCategory(id)
+        val category = request.toDomain(id)
         val existingCategoryEntity = category.toEntity().apply { this.id = id }
-        val duplicateCategoryEntity = category.toEntity()
         whenever(categoryRepository.findById(id)).thenReturn(Optional.of(existingCategoryEntity))
-        whenever(categoryRepository.findByName(request.name)).thenReturn(duplicateCategoryEntity)
+        whenever(categoryRepository.existsByName(request.name)).thenReturn(true)
 
         // When
         val exception = assertThrows<CategoryException> {
