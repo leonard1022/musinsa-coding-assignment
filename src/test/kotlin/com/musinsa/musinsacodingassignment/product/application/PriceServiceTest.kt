@@ -1,7 +1,7 @@
 package com.musinsa.musinsacodingassignment.product.application
 
-import com.musinsa.musinsacodingassignment.brand.domain.toDomain
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
+import com.musinsa.musinsacodingassignment.brand.entity.toDomain
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.category.entity.toDomain

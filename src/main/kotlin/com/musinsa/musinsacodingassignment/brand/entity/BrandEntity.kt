@@ -1,5 +1,6 @@
 package com.musinsa.musinsacodingassignment.brand.entity
 
+import com.musinsa.musinsacodingassignment.brand.domain.Brand
 import com.musinsa.musinsacodingassignment.common.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -15,3 +16,13 @@ class BrandEntity(
         this.id = id
     }
 }
+
+fun Brand.toEntity() = BrandEntity(
+    id = this.id ?: 0,
+    name = this.name
+)
+
+fun BrandEntity.toDomain() = Brand(
+    id = this.id,
+    name = this.name,
+)

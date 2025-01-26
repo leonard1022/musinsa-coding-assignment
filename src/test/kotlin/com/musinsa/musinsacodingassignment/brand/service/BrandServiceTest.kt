@@ -5,7 +5,7 @@ import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
 import com.musinsa.musinsacodingassignment.brand.exception.BrandException
 import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.CreateBrandRequest
 import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.UpdateBrandRequest
-import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.toBrand
+import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.toDomain
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -33,7 +33,7 @@ class BrandServiceTest {
     fun `createBrand should save and return brand`() {
         // Given
         val request = CreateBrandRequest(name = "Test Brand")
-        val brand = request.toBrand()
+        val brand = request.toDomain()
         val brandEntity = BrandEntity(name = "Test Brand")
         whenever(brandRepository.save(any<BrandEntity>())).thenReturn(brandEntity)
 

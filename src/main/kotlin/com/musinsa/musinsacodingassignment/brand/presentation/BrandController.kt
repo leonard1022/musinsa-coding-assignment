@@ -13,12 +13,18 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@RestController
+@RestController("/brands")
 class BrandController(
     private val brandService: BrandService
-) : V1Controller() {
+) {
 
-    @PostMapping("/brands")
+    @GetMapping
+    fun getBrands(): ResponseEntity<List<Brand>> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(brandService.getBrands())
+    }
+
+    @PostMapping
     fun createBrand(
         @RequestBody request: CreateBrandRequest
     ): ResponseEntity<CreateBrandResponse> {
@@ -26,13 +32,7 @@ class BrandController(
             .body(brandService.createBrand(request).toCreateBrandResponse())
     }
 
-    @GetMapping("/brands")
-    fun getBrands(): ResponseEntity<List<Brand>> {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(brandService.getBrands())
-    }
-
-    @PatchMapping("/brands/{id}")
+    @PatchMapping("/{id}")
     fun updateBrand(
         @PathVariable id: Long,
         @RequestBody request: UpdateBrandRequest
@@ -41,7 +41,7 @@ class BrandController(
             .body(brandService.updateBrand(id, request).toUpdateBrandResponse())
     }
 
-    @DeleteMapping("/brands/{id}")
+    @DeleteMapping("/{id}")
     fun deleteBrand(
         @PathVariable id: Long
     ): ResponseEntity<Unit> {

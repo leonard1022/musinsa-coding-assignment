@@ -6,7 +6,7 @@ data class CreateBrandRequest(
     val name: String
 )
 
-fun CreateBrandRequest.toBrand() = Brand(
+fun CreateBrandRequest.toDomain() = Brand(
     id = 0,
     name = this.name,
 )
