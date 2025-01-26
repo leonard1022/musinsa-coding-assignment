@@ -6,6 +6,6 @@ data class InquiryCategoryListResponse(
     val categories: List<Category>
 )
 
-fun List<Category>.toResponse() = InquiryCategoryListResponse(
+fun List<Category>.toInquiryCategoryListResponse() = InquiryCategoryListResponse(
     categories = this
 )

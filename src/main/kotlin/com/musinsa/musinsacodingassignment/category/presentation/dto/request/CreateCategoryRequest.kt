@@ -6,7 +6,7 @@ data class CreateCategoryRequest(
     val name: String
 )
 
-fun CreateCategoryRequest.toCategory() = Category(
+fun CreateCategoryRequest.toDomain() = Category(
     id = 0,
     name = this.name,
 )

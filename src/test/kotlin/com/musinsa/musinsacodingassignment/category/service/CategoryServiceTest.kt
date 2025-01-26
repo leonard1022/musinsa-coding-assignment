@@ -1,6 +1,6 @@
 package com.musinsa.musinsacodingassignment.category.service
 
-import com.musinsa.musinsacodingassignment.brand.entity.CategoryEntity
+import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.category.code.CategoryErrorCode
 import com.musinsa.musinsacodingassignment.category.domain.Category
 import com.musinsa.musinsacodingassignment.category.domain.toEntity

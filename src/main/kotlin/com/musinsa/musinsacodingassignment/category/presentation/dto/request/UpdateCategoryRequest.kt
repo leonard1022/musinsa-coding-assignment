@@ -6,7 +6,7 @@ data class UpdateCategoryRequest(
     val name: String
 )
 
-fun UpdateCategoryRequest.toCategory(id: Long) = Category(
+fun UpdateCategoryRequest.toDomain(id: Long) = Category(
     id = id,
     name = this.name,
 )

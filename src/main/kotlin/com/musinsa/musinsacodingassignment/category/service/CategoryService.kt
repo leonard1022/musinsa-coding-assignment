@@ -1,44 +1,48 @@
 package com.musinsa.musinsacodingassignment.category.service
 
-import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
+import com.musinsa.musinsacodingassignment.category.entity.toDomain
+import com.musinsa.musinsacodingassignment.category.entity.toEntity
 import com.musinsa.musinsacodingassignment.category.code.CategoryErrorCode
 import com.musinsa.musinsacodingassignment.category.domain.Category
-import com.musinsa.musinsacodingassignment.category.domain.toDomain
-import com.musinsa.musinsacodingassignment.category.domain.toEntity
 import com.musinsa.musinsacodingassignment.category.exception.CategoryException
 import com.musinsa.musinsacodingassignment.category.presentation.dto.request.CreateCategoryRequest
 import com.musinsa.musinsacodingassignment.category.presentation.dto.request.UpdateCategoryRequest
-import com.musinsa.musinsacodingassignment.category.presentation.dto.request.toCategory
-import org.slf4j.LoggerFactory
+import com.musinsa.musinsacodingassignment.category.presentation.dto.request.toDomain
+import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CategoryService(
     private val categoryRepository: CategoryRepository
 ) {
 
-    fun createCategory(request: CreateCategoryRequest): Category {
-        validateCategoryName(request.name)
-        checkCategoryExistsByName(request.name)
-
-        val category = request.toCategory()
-        return saveCategory(category)
-    }
-
     fun getCategories(): List<Category> {
         return categoryRepository.findAll().map { it.toDomain() }
     }
 
+    @Transactional
+    fun createCategory(request: CreateCategoryRequest): Category {
+        validateCategoryName(request.name)
+        checkCategoryExistsByName(request.name)
+
+        val category = request.toDomain()
+        return saveCategory(category)
+    }
+
+    @Transactional
     fun updateCategory(id: Long, request: UpdateCategoryRequest): Category {
-        categoryRepository.findById(id)
-            .orElseThrow { CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND) }
+        val categoryEntity = categoryRepository.findByIdOrNull(id)
+            ?: throw CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)
 
         validateCategoryName(request.name)
         checkCategoryExistsByName(request.name)
 
-        val updatedCategory = request.toCategory(id)
-        return saveCategory(updatedCategory)
+        categoryEntity.toDomain().updateName(request.name).let {
+            return saveCategory(it)
+        }
     }
 
     private fun validateCategoryName(name: String) {
@@ -48,8 +52,10 @@ class CategoryService(
     }
 
     private fun checkCategoryExistsByName(name: String) {
-        categoryRepository.findByName(name)?.let {
-            throw CategoryException(CategoryErrorCode.CATEGORY_ALREADY_EXISTS)
+        categoryRepository.existsByName(name).let {
+            if (it) {
+                throw CategoryException(CategoryErrorCode.CATEGORY_ALREADY_EXISTS)
+            }
         }
     }
 
