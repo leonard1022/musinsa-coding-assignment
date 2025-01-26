@@ -13,6 +13,3 @@ enum class CategoryErrorCode(
     CATEGORY_DUPLICATED("CATEGORY_005", "Category Duplicated", HttpStatus.BAD_REQUEST)
     ;
 }
-
-
-

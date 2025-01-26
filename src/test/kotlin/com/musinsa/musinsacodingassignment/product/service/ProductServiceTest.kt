@@ -1,7 +1,7 @@
 package com.musinsa.musinsacodingassignment.product.service
 
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
-import com.musinsa.musinsacodingassignment.brand.entity.CategoryEntity
+import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.product.entity.ProductEntity
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow

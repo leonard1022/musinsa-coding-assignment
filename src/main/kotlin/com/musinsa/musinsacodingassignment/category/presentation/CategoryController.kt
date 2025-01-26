@@ -1,24 +1,27 @@
-package com.musinsa.musinsacodingassignment.brand.presentation
+package com.musinsa.musinsacodingassignment.category.presentation
 
 import com.musinsa.musinsacodingassignment.category.domain.Category
 import com.musinsa.musinsacodingassignment.category.presentation.dto.request.CreateCategoryRequest
 import com.musinsa.musinsacodingassignment.category.presentation.dto.request.UpdateCategoryRequest
-import com.musinsa.musinsacodingassignment.category.presentation.dto.response.CreateCategoryResponse
-import com.musinsa.musinsacodingassignment.category.presentation.dto.response.UpdateCategoryResponse
-import com.musinsa.musinsacodingassignment.category.presentation.dto.response.toCreateCategoryResponse
-import com.musinsa.musinsacodingassignment.category.presentation.dto.response.toUpdateCategoryResponse
+import com.musinsa.musinsacodingassignment.category.presentation.dto.response.*
 import com.musinsa.musinsacodingassignment.category.service.CategoryService
-import com.musinsa.musinsacodingassignment.common.presentation.V1Controller
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@RequestMapping("/categories")
 class CategoryController(
     private val categoryService: CategoryService
-) : V1Controller() {
+) {
 
-    @PostMapping("/categories")
+    @GetMapping
+    fun getCategories(): ResponseEntity<InquiryCategoryListResponse> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(categoryService.getCategories().toInquiryCategoryListResponse())
+    }
+
+    @PostMapping
     fun createCategory(
         @RequestBody request: CreateCategoryRequest
     ): ResponseEntity<CreateCategoryResponse> {
@@ -26,13 +29,7 @@ class CategoryController(
             .body(categoryService.createCategory(request).toCreateCategoryResponse())
     }
 
-    @GetMapping("/categories")
-    fun getCategories(): ResponseEntity<List<Category>> {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(categoryService.getCategories())
-    }
-
-    @PatchMapping("/categories/{id}")
+    @PatchMapping("/{id}")
     fun updateCategory(
         @PathVariable id: Long,
         @RequestBody request: UpdateCategoryRequest

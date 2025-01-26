@@ -1,7 +1,7 @@
 package com.musinsa.musinsacodingassignment.product.repository
 
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
-import com.musinsa.musinsacodingassignment.brand.entity.CategoryEntity
+import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
 import com.musinsa.musinsacodingassignment.product.entity.ProductEntity
@@ -47,5 +47,4 @@ class ProductRepositoryTest {
         // then
         assertEquals(3, result.size)
     }
-
 }
