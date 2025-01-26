@@ -1,0 +1,50 @@
+package com.musinsa.musinsacodingassignment.product.presentation
+
+import com.musinsa.musinsacodingassignment.product.presentation.dto.request.CreateProductRequest
+import com.musinsa.musinsacodingassignment.product.presentation.dto.request.UpdateProductRequest
+import com.musinsa.musinsacodingassignment.product.presentation.dto.request.toCreateProductVO
+import com.musinsa.musinsacodingassignment.product.presentation.dto.request.toUpdateProductVO
+import com.musinsa.musinsacodingassignment.product.presentation.dto.response.*
+import com.musinsa.musinsacodingassignment.product.service.ProductService
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@RequestMapping("/products")
+class ProductController(
+    private val productService: ProductService,
+) {
+
+    @GetMapping
+    fun getProducts(): ResponseEntity<GetProductListResponse> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(productService.getProducts().toGetProductListResponse())
+    }
+
+    @PostMapping
+    fun createProduct(
+        @RequestBody request: CreateProductRequest
+    ): ResponseEntity<CreateProductResponse> {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(productService.createProduct(request.toCreateProductVO()).toCreateProductResponse())
+    }
+
+    @PatchMapping("/{id}")
+    fun updateProduct(
+        @PathVariable id: Long,
+        @RequestBody request: UpdateProductRequest
+    ): ResponseEntity<UpdateProductResponse> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(productService.updateProduct(request.toUpdateProductVO(id)).toUpdateProductResponse())
+
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteProduct(
+        @PathVariable id: Long
+    ): ResponseEntity<Void> {
+        productService.deleteProduct(id)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
+}

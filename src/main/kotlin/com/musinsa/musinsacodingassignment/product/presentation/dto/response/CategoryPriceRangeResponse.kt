@@ -1,6 +1,6 @@
-package com.musinsa.musinsacodingassignment.product.presentation.price.dto
+package com.musinsa.musinsacodingassignment.product.presentation.dto.response
 
-import com.musinsa.musinsacodingassignment.product.application.vo.CategoryPriceRange
+import com.musinsa.musinsacodingassignment.product.service.vo.CategoryPriceRange
 
 data class CategoryPriceRangeResponse(
     val category: String,

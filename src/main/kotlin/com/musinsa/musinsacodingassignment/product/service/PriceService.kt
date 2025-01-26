@@ -1,4 +1,4 @@
-package com.musinsa.musinsacodingassignment.product.application
+package com.musinsa.musinsacodingassignment.product.service
 
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
 import com.musinsa.musinsacodingassignment.brand.entity.toDomain
@@ -6,11 +6,13 @@ import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.category.entity.toDomain
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
-import com.musinsa.musinsacodingassignment.product.application.vo.*
-import com.musinsa.musinsacodingassignment.product.code.ProductErrorCode
+import com.musinsa.musinsacodingassignment.product.exception.ProductErrorCode
+import com.musinsa.musinsacodingassignment.product.domain.Product
 import com.musinsa.musinsacodingassignment.product.entity.ProductEntity
+import com.musinsa.musinsacodingassignment.product.entity.toDomain
 import com.musinsa.musinsacodingassignment.product.exception.ProductException
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
+import com.musinsa.musinsacodingassignment.product.service.vo.*
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,25 +23,18 @@ class PriceService(
 ) {
 
     fun getMinimumPriceByCategory(): List<MinimumPriceProduct> {
-        val categoryEntities = categoryRepository.findAll()
-        val allProducts = productRepository.findAllByDeletedAtIsNull()
-        val results = mutableListOf<MinimumPriceProduct>()
-
-        categoryEntities.forEach { categoryEntity ->
-            val products = allProducts.filter { it.category == categoryEntity }
-            val minPriceProduct = products.minByOrNull { it.price }
-            minPriceProduct?.let { product ->
-                results.add(
-                    MinimumPriceProduct(
-                        brand = product.brand.toDomain(),
-                        category = categoryEntity.toDomain(),
-                        price = product.price
-                    )
-                )
-            }
+        val categoryEntities = categoryRepository.findAll().map {
+            it.toDomain()
+        }
+        val allProducts = productRepository.findAllByDeletedAtIsNull().map {
+            it.toDomain()
         }
 
-        return results
+        // 1. 카테고리로 상품을 조회
+        //
+
+
+        return listOf<MinimumPriceProduct>()
     }
 
 
@@ -77,7 +72,7 @@ class PriceService(
         val allProducts = productRepository.findAllByDeletedAtIsNull()
 
         var resultBrandEntity = brandEntities.first()
-        var resultPrice = Int.MAX_VALUE
+        var minimumTotalPrice = Int.MAX_VALUE
         var resultProductEntities = mutableListOf<ProductEntity>()
 
         brandEntities.forEach { brandEntity ->
@@ -86,16 +81,16 @@ class PriceService(
                 categoryEntities,
                 allProducts
             )
-            if (totalCategoryPrice != 0 && totalCategoryPrice < resultPrice) {
+            if (totalCategoryPrice != 0 && totalCategoryPrice < minimumTotalPrice) {
                 resultBrandEntity = brandEntity
-                resultPrice = totalCategoryPrice
+                minimumTotalPrice = totalCategoryPrice
                 resultProductEntities = totalCategoryProductEntities
             }
         }
 
         return AllCategoryPriceByBrand(
             brand = resultBrandEntity.toDomain(),
-            totalPrice = resultPrice,
+            totalPrice = minimumTotalPrice,
             categories = resultProductEntities.map {
                 CategoryPrice(
                     category = it.category.toDomain(),

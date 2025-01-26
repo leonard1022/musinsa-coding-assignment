@@ -1,4 +1,4 @@
-package com.musinsa.musinsacodingassignment.product.application.vo
+package com.musinsa.musinsacodingassignment.product.service.vo
 
 import com.musinsa.musinsacodingassignment.brand.domain.Brand
 

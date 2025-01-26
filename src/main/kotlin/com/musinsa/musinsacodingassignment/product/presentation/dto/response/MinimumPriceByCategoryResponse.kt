@@ -1,6 +1,6 @@
-package com.musinsa.musinsacodingassignment.product.presentation.price.dto
+package com.musinsa.musinsacodingassignment.product.presentation.dto.response
 
-import com.musinsa.musinsacodingassignment.product.application.vo.MinimumPriceProduct
+import com.musinsa.musinsacodingassignment.product.service.vo.MinimumPriceProduct
 
 data class MinimumPriceByCategoryResponse(
     val products: List<MinimumPriceProduct>,

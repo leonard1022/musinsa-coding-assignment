@@ -1,6 +1,6 @@
-package com.musinsa.musinsacodingassignment.product.presentation.price.dto
+package com.musinsa.musinsacodingassignment.product.presentation.dto.response
 
-import com.musinsa.musinsacodingassignment.product.application.vo.AllCategoryPriceByBrand
+import com.musinsa.musinsacodingassignment.product.service.vo.AllCategoryPriceByBrand
 
 data class AllCategoryPriceByBrandResponse(
     val lowestPrice: LowestPrice
