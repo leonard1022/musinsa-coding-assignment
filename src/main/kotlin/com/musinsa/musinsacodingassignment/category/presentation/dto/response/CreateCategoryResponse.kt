@@ -1,11 +1,11 @@
 package com.musinsa.musinsacodingassignment.category.presentation.dto.response
 
-import com.musinsa.musinsacodingassignment.category.domain.Category
+import com.musinsa.musinsacodingassignment.category.service.vo.CategoryVO
 
 data class CreateCategoryResponse(
     val id: Long
 )
 
-fun Category.toCreateCategoryResponse() = CreateCategoryResponse(
-    id = this.id!!
+fun CategoryVO.toCreateCategoryResponse() = CreateCategoryResponse(
+    id = this.id
 )

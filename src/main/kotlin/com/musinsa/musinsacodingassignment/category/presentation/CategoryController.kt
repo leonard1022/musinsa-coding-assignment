@@ -1,8 +1,8 @@
 package com.musinsa.musinsacodingassignment.category.presentation
 
-import com.musinsa.musinsacodingassignment.category.domain.Category
 import com.musinsa.musinsacodingassignment.category.presentation.dto.request.CreateCategoryRequest
 import com.musinsa.musinsacodingassignment.category.presentation.dto.request.UpdateCategoryRequest
+import com.musinsa.musinsacodingassignment.category.presentation.dto.request.toVO
 import com.musinsa.musinsacodingassignment.category.presentation.dto.response.*
 import com.musinsa.musinsacodingassignment.category.service.CategoryService
 import org.springframework.http.HttpStatus
@@ -16,9 +16,9 @@ class CategoryController(
 ) {
 
     @GetMapping
-    fun getCategories(): ResponseEntity<InquiryCategoryListResponse> {
+    fun getCategories(): ResponseEntity<GetCategoryListResponse> {
         return ResponseEntity.status(HttpStatus.OK)
-            .body(categoryService.getCategories().toInquiryCategoryListResponse())
+            .body(categoryService.getCategories().toGetCategoryListResponse())
     }
 
     @PostMapping
@@ -26,7 +26,7 @@ class CategoryController(
         @RequestBody request: CreateCategoryRequest
     ): ResponseEntity<CreateCategoryResponse> {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(categoryService.createCategory(request).toCreateCategoryResponse())
+            .body(categoryService.createCategory(request.toVO()).toCreateCategoryResponse())
     }
 
     @PatchMapping("/{id}")
@@ -35,6 +35,6 @@ class CategoryController(
         @RequestBody request: UpdateCategoryRequest
     ): ResponseEntity<UpdateCategoryResponse> {
         return ResponseEntity.status(HttpStatus.OK)
-            .body(categoryService.updateCategory(id, request).toUpdateCategoryResponse())
+            .body(categoryService.updateCategory(request.toVO(id)).toUpdateCategoryResponse())
     }
 }
