@@ -18,26 +18,12 @@ class CategoryService(
     private val categoryRepository: CategoryRepository
 ) {
 
-    companion object {
-        private val logger = LoggerFactory.getLogger(this::class.java)
-    }
-
     fun createCategory(request: CreateCategoryRequest): Category {
-        if (request.name.isBlank()) {
-            throw CategoryException(CategoryErrorCode.CATEGORY_NAME_IS_REQUIRED)
-        }
-
-        categoryRepository.findByName(request.name)?.let {
-            throw CategoryException(CategoryErrorCode.CATEGORY_ALREADY_EXISTS)
-        }
+        validateCategoryName(request.name)
+        checkCategoryExistsByName(request.name)
 
         val category = request.toCategory()
-        try {
-            val entity = categoryRepository.save(category.toEntity())
-            return entity.toDomain()
-        } catch (ex: DataIntegrityViolationException) {
-            throw CategoryException(CategoryErrorCode.CATEGORY_DUPLICATED)
-        }
+        return saveCategory(category)
     }
 
     fun getCategories(): List<Category> {
@@ -48,21 +34,31 @@ class CategoryService(
         categoryRepository.findById(id)
             .orElseThrow { CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND) }
 
-        request.toCategory(id).let {
-            if (it.name.isBlank()) {
-                throw CategoryException(CategoryErrorCode.CATEGORY_NAME_IS_REQUIRED)
-            }
+        validateCategoryName(request.name)
+        checkCategoryExistsByName(request.name)
 
-            categoryRepository.findByName(it.name)?.let {
-                throw CategoryException(CategoryErrorCode.CATEGORY_ALREADY_EXISTS)
-            }
+        val updatedCategory = request.toCategory(id)
+        return saveCategory(updatedCategory)
+    }
 
-            try {
-                val updatedEntity = categoryRepository.save(it.toEntity())
-                return updatedEntity.toDomain()
-            } catch (ex: DataIntegrityViolationException) {
-                throw CategoryException(CategoryErrorCode.CATEGORY_DUPLICATED)
-            }
+    private fun validateCategoryName(name: String) {
+        if (name.isBlank()) {
+            throw CategoryException(CategoryErrorCode.CATEGORY_NAME_IS_REQUIRED)
+        }
+    }
+
+    private fun checkCategoryExistsByName(name: String) {
+        categoryRepository.findByName(name)?.let {
+            throw CategoryException(CategoryErrorCode.CATEGORY_ALREADY_EXISTS)
+        }
+    }
+
+    private fun saveCategory(category: Category): Category {
+        return try {
+            val entity = categoryRepository.save(category.toEntity())
+            entity.toDomain()
+        } catch (ex: DataIntegrityViolationException) {
+            throw CategoryException(CategoryErrorCode.CATEGORY_DUPLICATED)
         }
     }
 }
