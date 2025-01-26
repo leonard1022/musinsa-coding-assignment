@@ -65,6 +65,8 @@ class CategoryService(
             entity.toDomain()
         } catch (ex: DataIntegrityViolationException) {
             throw CategoryException(CategoryErrorCode.CATEGORY_DUPLICATED)
+        } catch (e: Exception) {
+            throw CategoryException(CategoryErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 }
