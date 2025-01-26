@@ -8,7 +8,6 @@ enum class CommonErrorCode(
     override val message: String
 ) :
     BaseErrorCode {
-    VALIDATION_ERROR("VALIDATION_ERROR", HttpStatus.BAD_REQUEST, "Check validation"),
     METHOD_NOT_ALLOWED("METHOD_NOT_ALLOWED", HttpStatus.METHOD_NOT_ALLOWED, "Method Not Allow"),
     NO_RESOURCE_FOUND("NO_RESOURCE_FOUND", HttpStatus.NOT_FOUND, "No Resource Found"),
     INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR, "Server Error");

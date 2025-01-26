@@ -1,4 +1,4 @@
-package com.musinsa.musinsacodingassignment.common.domain
+package com.musinsa.musinsacodingassignment.common.entity
 
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
