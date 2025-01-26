@@ -2,15 +2,15 @@ package com.musinsa.musinsacodingassignment.brand.service
 
 import com.musinsa.musinsacodingassignment.brand.code.BrandErrorCode
 import com.musinsa.musinsacodingassignment.brand.domain.Brand
-import com.musinsa.musinsacodingassignment.brand.domain.toDomain
-import com.musinsa.musinsacodingassignment.brand.domain.toEntity
+import com.musinsa.musinsacodingassignment.brand.entity.toDomain
+import com.musinsa.musinsacodingassignment.brand.entity.toEntity
 import com.musinsa.musinsacodingassignment.brand.exception.BrandException
 import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.CreateBrandRequest
 import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.UpdateBrandRequest
-import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.toBrand
+import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.toDomain
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
-import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,8 +19,8 @@ class BrandService(
     private val brandRepository: BrandRepository
 ) {
 
-    companion object {
-        private val logger = LoggerFactory.getLogger(this::class.java)
+    fun getBrands(): List<Brand> {
+        return brandRepository.findAllByDeletedAtIsNull().map { it.toDomain() }
     }
 
     @Transactional
@@ -28,30 +28,27 @@ class BrandService(
         validateBrandName(request.name)
         checkBrandExistsByName(request.name)
 
-        val brand = request.toBrand()
+        val brand = request.toDomain()
         return saveBrand(brand)
-    }
-
-    fun getBrands(): List<Brand> {
-        return brandRepository.findAllByDeletedAtIsNull().map { it.toDomain() }
     }
 
     @Transactional
     fun updateBrand(id: Long, request: UpdateBrandRequest): Brand {
-        brandRepository.findById(id)
+        val brandEntity = brandRepository.findById(id)
             .orElseThrow { BrandException(BrandErrorCode.BRAND_NOT_FOUND) }
 
         validateBrandName(request.name)
         checkBrandExistsByName(request.name)
 
-        val updatedBrand = request.toBrand(id)
-        return saveBrand(updatedBrand)
+        brandEntity.toDomain().updateName(request.name).let {
+            return saveBrand(it)
+        }
     }
 
     @Transactional
     fun deleteBrand(id: Long) {
-        val brand = brandRepository.findById(id)
-            .orElseThrow { BrandException(BrandErrorCode.BRAND_NOT_FOUND) }
+        val brand = brandRepository.findByIdOrNull(id)
+            ?: throw BrandException(BrandErrorCode.BRAND_NOT_FOUND)
         brandRepository.deleteBrandEntity(brand.id)
     }
 
