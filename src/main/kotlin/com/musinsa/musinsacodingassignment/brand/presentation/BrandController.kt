@@ -8,7 +8,6 @@ import com.musinsa.musinsacodingassignment.brand.presentation.dto.response.Updat
 import com.musinsa.musinsacodingassignment.brand.presentation.dto.response.toCreateBrandResponse
 import com.musinsa.musinsacodingassignment.brand.presentation.dto.response.toUpdateBrandResponse
 import com.musinsa.musinsacodingassignment.brand.service.BrandService
-import com.musinsa.musinsacodingassignment.common.presentation.V1Controller
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
