@@ -1,4 +1,4 @@
-package com.musinsa.musinsacodingassignment.category.code
+package com.musinsa.musinsacodingassignment.category.exception
 
 import com.musinsa.musinsacodingassignment.common.code.BaseErrorCode
 import org.springframework.http.HttpStatus
