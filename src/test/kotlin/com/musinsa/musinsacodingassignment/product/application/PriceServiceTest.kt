@@ -2,9 +2,9 @@ package com.musinsa.musinsacodingassignment.product.application
 
 import com.musinsa.musinsacodingassignment.brand.domain.toDomain
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
-import com.musinsa.musinsacodingassignment.brand.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
-import com.musinsa.musinsacodingassignment.category.domain.toDomain
+import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
+import com.musinsa.musinsacodingassignment.category.entity.toDomain
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
 import com.musinsa.musinsacodingassignment.product.application.vo.*
 import com.musinsa.musinsacodingassignment.product.code.ProductErrorCode
@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
-import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 class PriceServiceTest {

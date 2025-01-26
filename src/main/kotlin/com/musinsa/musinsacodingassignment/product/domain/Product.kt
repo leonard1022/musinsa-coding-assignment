@@ -1,7 +1,7 @@
 package com.musinsa.musinsacodingassignment.product.domain
 
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
-import com.musinsa.musinsacodingassignment.brand.entity.CategoryEntity
+import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.product.entity.ProductEntity
 
 class Product(

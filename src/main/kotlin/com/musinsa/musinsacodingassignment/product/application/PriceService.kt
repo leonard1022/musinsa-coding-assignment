@@ -2,19 +2,16 @@ package com.musinsa.musinsacodingassignment.product.application
 
 import com.musinsa.musinsacodingassignment.brand.domain.toDomain
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
-import com.musinsa.musinsacodingassignment.brand.entity.CategoryEntity
+import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
-import com.musinsa.musinsacodingassignment.category.domain.toDomain
+import com.musinsa.musinsacodingassignment.category.entity.toDomain
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
 import com.musinsa.musinsacodingassignment.product.application.vo.*
 import com.musinsa.musinsacodingassignment.product.code.ProductErrorCode
-import com.musinsa.musinsacodingassignment.product.domain.Product
-import com.musinsa.musinsacodingassignment.product.domain.toDomain
 import com.musinsa.musinsacodingassignment.product.entity.ProductEntity
 import com.musinsa.musinsacodingassignment.product.exception.ProductException
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
 import org.springframework.stereotype.Service
-import kotlin.math.min
 
 @Service
 class PriceService(
