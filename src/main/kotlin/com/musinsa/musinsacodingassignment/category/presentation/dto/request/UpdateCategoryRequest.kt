@@ -1,12 +1,12 @@
 package com.musinsa.musinsacodingassignment.category.presentation.dto.request
 
-import com.musinsa.musinsacodingassignment.category.domain.Category
+import com.musinsa.musinsacodingassignment.category.service.vo.UpdateCategoryVO
 
 data class UpdateCategoryRequest(
     val name: String
 )
 
-fun UpdateCategoryRequest.toDomain(id: Long) = Category(
+fun UpdateCategoryRequest.toVO(id: Long) = UpdateCategoryVO(
     id = id,
     name = this.name,
 )

@@ -1,6 +1,5 @@
 package com.musinsa.musinsacodingassignment.brand.exception
 
-import com.musinsa.musinsacodingassignment.brand.code.BrandErrorCode
 import com.musinsa.musinsacodingassignment.common.exception.BaseException
 import org.springframework.http.HttpStatus
 

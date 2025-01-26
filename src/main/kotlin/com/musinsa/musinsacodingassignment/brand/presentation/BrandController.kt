@@ -1,12 +1,9 @@
 package com.musinsa.musinsacodingassignment.brand.presentation
 
-import com.musinsa.musinsacodingassignment.brand.domain.Brand
 import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.CreateBrandRequest
 import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.UpdateBrandRequest
-import com.musinsa.musinsacodingassignment.brand.presentation.dto.response.CreateBrandResponse
-import com.musinsa.musinsacodingassignment.brand.presentation.dto.response.UpdateBrandResponse
-import com.musinsa.musinsacodingassignment.brand.presentation.dto.response.toCreateBrandResponse
-import com.musinsa.musinsacodingassignment.brand.presentation.dto.response.toUpdateBrandResponse
+import com.musinsa.musinsacodingassignment.brand.presentation.dto.request.toVO
+import com.musinsa.musinsacodingassignment.brand.presentation.dto.response.*
 import com.musinsa.musinsacodingassignment.brand.service.BrandService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,9 +16,9 @@ class BrandController(
 ) {
 
     @GetMapping
-    fun getBrands(): ResponseEntity<List<Brand>> {
+    fun getBrands(): ResponseEntity<GetBrandListResponse> {
         return ResponseEntity.status(HttpStatus.OK)
-            .body(brandService.getBrands())
+            .body(brandService.getBrands().toGetBrandListResponse())
     }
 
     @PostMapping
@@ -29,7 +26,7 @@ class BrandController(
         @RequestBody request: CreateBrandRequest
     ): ResponseEntity<CreateBrandResponse> {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(brandService.createBrand(request).toCreateBrandResponse())
+            .body(brandService.createBrand(request.toVO()).toCreateBrandResponse())
     }
 
     @PatchMapping("/{id}")
@@ -38,7 +35,7 @@ class BrandController(
         @RequestBody request: UpdateBrandRequest
     ): ResponseEntity<UpdateBrandResponse> {
         return ResponseEntity.status(HttpStatus.OK)
-            .body(brandService.updateBrand(id, request).toUpdateBrandResponse())
+            .body(brandService.updateBrand(request.toVO(id)).toUpdateBrandResponse())
     }
 
     @DeleteMapping("/{id}")
