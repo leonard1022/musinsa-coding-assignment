@@ -1,9 +1,12 @@
 package com.musinsa.musinsacodingassignment.product.service.vo
 
-import com.musinsa.musinsacodingassignment.category.domain.Category
-
-data class CategoryPriceRange(
-    val category: Category,
+data class MinMaxPriceByCategoryVO(
+    val category: String,
     val minPriceProducts: List<BrandPrice>,
     val maxPriceProducts: List<BrandPrice>
+)
+
+data class BrandPrice(
+    val brand: String,
+    val price: Int
 )

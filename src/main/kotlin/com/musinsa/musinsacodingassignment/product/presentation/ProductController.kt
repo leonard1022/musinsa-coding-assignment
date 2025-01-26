@@ -5,6 +5,7 @@ import com.musinsa.musinsacodingassignment.product.presentation.dto.request.Upda
 import com.musinsa.musinsacodingassignment.product.presentation.dto.request.toCreateProductVO
 import com.musinsa.musinsacodingassignment.product.presentation.dto.request.toUpdateProductVO
 import com.musinsa.musinsacodingassignment.product.presentation.dto.response.*
+import com.musinsa.musinsacodingassignment.product.service.ProductInquiryService
 import com.musinsa.musinsacodingassignment.product.service.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/products")
 class ProductController(
     private val productService: ProductService,
+    private val productInquiryService: ProductInquiryService
 ) {
 
     @GetMapping
@@ -37,7 +39,6 @@ class ProductController(
     ): ResponseEntity<UpdateProductResponse> {
         return ResponseEntity.status(HttpStatus.OK)
             .body(productService.updateProduct(request.toUpdateProductVO(id)).toUpdateProductResponse())
-
     }
 
     @DeleteMapping("/{id}")
@@ -46,5 +47,25 @@ class ProductController(
     ): ResponseEntity<Void> {
         productService.deleteProduct(id)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
+
+    @GetMapping("/lowest-by-category")
+    fun getLowestPricesByCategory(): ResponseEntity<LowestPricesByCategoryResponse> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(productInquiryService.getLowestPricesByCategory().toMLowestPricesByCategoryResponse())
+    }
+
+    @GetMapping("/lowest-single-brand")
+    fun getLowestSingleBrand(): ResponseEntity<LowestSingleBrandResponse> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(productInquiryService.getLowestSingleBrand().toLowestSingleBrandResponse())
+    }
+
+    @GetMapping("/{categoryName}/min-max")
+    fun getMinMaxPriceByCategory(
+        @PathVariable categoryName: String
+    ): ResponseEntity<MinMaxPriceResponse> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(productInquiryService.getMinMaxPriceByCategory(categoryName).toMinMaxPriceResponse())
     }
 }
