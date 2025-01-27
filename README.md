@@ -21,11 +21,11 @@
 
 ## 주요 기능
 1. **상품 생성**: 새로운 상품을 생성합니다.
-2. **상품 조회**: 특정 상품을 조회합니다.
+2. **상품 조회**: 상품을 조회합니다.
 3. **상품 수정**: 기존 상품의 정보를 수정합니다.
 4. **상품 삭제**: 특정 상품을 삭제합니다.
 5. **카테고리별 최저가 상품 조회**: 각 카테고리별 최저가 상품을 조회합니다.
-6. **단일 브랜드 최저가 상품 조회**: 단일 ���랜드로 모든 카���고리 상품을 최저가로 구매할 수 있는 정보를 조회합니다.
+6. **단일 브랜드 최저가 상품 조회**: 단일 브랜드로 모든 카고리 상품을 최저가로 구매할 수 있는 정보를 조회합니다.
 7. **카테고리별 최저가 및 최고가 상품 조회**: 각 카테고리별 최저가 및 최고가 상품을 조회합니다.
 
 ## 설정 및 실행 방법
@@ -51,7 +51,192 @@
     ```
 
 ## API 문서
-API 문서는 Swagger를 통해 자동 생성됩니다. 애플리케이션을 실행한 후, 다음 URL에서 Swagger UI를 통해 API 문서를 확인할 수 있습니다:
-```
-http://localhost:8080/swagger-ui.html
-```
+
+### 상품 API
+
+#### 1. 상품 생성
+- **URL**: `/products`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "brandId": 1,
+    "categoryId": 1,
+    "price": 1000
+  }
+  ```
+- **Response**:
+    - **Status Code**: `201 Created`
+    - **Response Body**:
+        ```json
+            {
+            "id": 10
+            }
+        ```
+#### 2. 상품 조회
+- **URL**: `/products`
+- **Method**: `GET`
+- **Response**:
+    - **Status Code**: `200 Ok`
+    - **Response Body**:
+        ```json
+            {
+              "products": [
+                {
+                  "id": 1,
+                  "brandId": 1,
+                  "brandName": "A",
+                  "categoryId": 1,
+                  "categoryName": "상의",
+                  "price": 11200
+                },
+                {
+                  "id": 2,
+                  "brandId": 1,
+                  "brandName": "A",
+                  "categoryId": 2,
+                  "categoryName": "아우터",
+                  "price": 5500
+                },
+                ...
+            }
+        ```
+#### 3. 상품 수정
+- **URL**: `/products/{id}`
+- **Method**: `PATCH`
+- **PathVariable**:
+    ```json
+    id: 1
+    ```
+- **Request Body**:
+  ```json
+  {
+    "name": test1,
+  }
+- **Response**:
+    - **Status Code**: `200 Ok`
+    - **Response Body**:
+        ```json
+            {
+              "id": 2,
+              "name": "test1"
+            }
+        ```
+#### 4. 상품 삭제
+- **URL**: `/products/{id}`
+- **Method**: `DELETE`
+- **Request Body**:
+    - **PathVariable**
+        ```json
+        id: 1
+        ```
+- **Response**:
+    - **Status Code**: `204 No Content`
+    - **Response Body**: `null`
+
+#### 5. 카테고리별 최저가 상품 조회
+- **URL**: `/products/lowest-by-category`
+- **Method**: `GET`
+- **Response**:
+    - **Status Code**: `200 Ok`
+    - **Response Body**:
+        ```json
+            {
+              "products": [
+                {
+                  "categoryName": "상의",
+                  "brandName": "C",
+                  "price": 10000
+                },
+                {
+                  "categoryName": "아우터",
+                  "brandName": "E",
+                  "price": 5000
+                },
+                {
+                  "categoryName": "바지",
+                  "brandName": "D",
+                  "price": 3000
+                },
+                {
+                  "categoryName": "스니커즈",
+                  "brandName": "A",
+                  "price": 9000
+                },
+                {
+                  "categoryName": "가방",
+                  "brandName": "A",
+                  "price": 2000
+                },
+                {
+                  "categoryName": "모자",
+                  "brandName": "D",
+                  "price": 1500
+                },
+                {
+                  "categoryName": "양말",
+                  "brandName": "I",
+                  "price": 1700
+                },
+                {
+                  "categoryName": "액세서리",
+                  "brandName": "F",
+                  "price": 1900
+                }
+              ],
+              "totalPrice": 34100
+            }
+        ```
+#### 6. 단일 브랜드 최저가 상품 조회
+- **URL**: `/products/lowest-single-brand`
+- **Method**: `GET`
+- **Response**:
+    - **Status Code**: `200 Ok`
+    - **Response Body**:
+        ```json
+            {
+              "brandName": "A",
+              "products": [
+                {
+                  "categoryName": "상의",
+                  "price": 10000
+                },
+                {
+                  "categoryName": "아우터",
+                  "price": 5000
+                },
+                {
+                  "categoryName": "스니커즈",
+                  "price": 9000
+                },
+                {
+                  "categoryName": "가방",
+                  "price": 2000
+                }
+              ],
+              "totalPrice": 26000
+            }
+        ```
+#### 7. 카테고리별 최저가 및 최고가 상품 조회
+- **URL**: `/products/lowest-highest-by-category`
+- **Method**: `GET`
+- **Response**:
+    - **Status Code**: `200 Ok`
+    - **Response Body**:
+        ```json
+            {
+              "category": "상의",
+              "minPrice": [
+                {
+                  "brand": "C",
+                  "price": 10000
+                }
+              ],
+              "maxPrice": [
+                {
+                  "brand": "I",
+                  "price": 11400
+                }
+              ]
+            }
+        ```
