@@ -1,8 +1,14 @@
 package com.musinsa.musinsacodingassignment.product.service
 
+import com.musinsa.musinsacodingassignment.brand.entity.toDomain
+import com.musinsa.musinsacodingassignment.brand.entity.toEntity
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
+import com.musinsa.musinsacodingassignment.category.entity.toDomain
+import com.musinsa.musinsacodingassignment.category.entity.toEntity
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
 import com.musinsa.musinsacodingassignment.common.exception.NotFoundException
+import com.musinsa.musinsacodingassignment.product.entity.toDomain
+import com.musinsa.musinsacodingassignment.product.entity.toEntity
 import com.musinsa.musinsacodingassignment.product.entity.toVO
 import com.musinsa.musinsacodingassignment.product.exception.ProductErrorCode
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
@@ -22,6 +28,11 @@ class ProductService(
     private val productRepository: ProductRepository
 ) {
 
+    fun getProduct(id: Long): ProductVO {
+        return productRepository.findByIdAndDeletedAtIsNull(id)?.toVO()
+            ?: throw NotFoundException(ProductErrorCode.PRODUCT_NOT_FOUND)
+    }
+
     fun getProducts(): List<ProductVO> {
         return productRepository.findAllByDeletedAtIsNull().map {
             it.toVO()
@@ -38,14 +49,20 @@ class ProductService(
 
     @Transactional
     fun updateProduct(vo: UpdateProductVO): ProductVO {
-        val productEntity = findProductById(vo.id)
-        val brandEntity = findBrandById(vo.brandId)
-        val categoryEntity = findCategoryById(vo.categoryId)
+        val product = findProductById(vo.id).toDomain()
+        val brand = findBrandById(vo.brandId).toDomain()
+        val category = findCategoryById(vo.categoryId).toDomain()
 
-        productEntity.brand = brandEntity
-        productEntity.category = categoryEntity
+        product.updateBrandId(brand.id)
+            .updateCategoryId(category.id)
+            .updatePrice(vo.price)
 
-        return productRepository.save(productEntity).toVO()
+        return productRepository.save(
+            product.toEntity(
+                brandEntity = brand.toEntity(),
+                categoryEntity = category.toEntity()
+            )
+        ).toVO()
     }
 
     @Transactional

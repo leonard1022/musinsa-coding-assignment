@@ -27,3 +27,8 @@ fun BrandEntity.toVO() = BrandVO(
     id = this.id,
     name = this.name,
 )
+
+fun Brand.toEntity() = BrandEntity(
+    id = this.id,
+    name = this.name
+)
