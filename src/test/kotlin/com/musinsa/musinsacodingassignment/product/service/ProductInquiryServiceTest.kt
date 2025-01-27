@@ -5,12 +5,9 @@ import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
 import com.musinsa.musinsacodingassignment.product.entity.ProductEntity
-import com.musinsa.musinsacodingassignment.product.exception.ProductErrorCode
-import com.musinsa.musinsacodingassignment.product.exception.ProductException
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension

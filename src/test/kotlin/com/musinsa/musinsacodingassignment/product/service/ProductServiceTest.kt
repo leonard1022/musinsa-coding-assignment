@@ -9,7 +9,6 @@ import com.musinsa.musinsacodingassignment.product.entity.toVO
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
 import com.musinsa.musinsacodingassignment.product.service.vo.CreateProductVO
 import com.musinsa.musinsacodingassignment.product.service.vo.UpdateProductVO
-import com.musinsa.musinsacodingassignment.product.service.vo.toEntity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
