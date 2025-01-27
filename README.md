@@ -81,24 +81,24 @@
     - **Response Body**:
         ```json
             {
-              "products": [
-                {
-                  "id": 1,
-                  "brandId": 1,
-                  "brandName": "A",
-                  "categoryId": 1,
-                  "categoryName": "상의",
-                  "price": 11200
-                },
-                {
-                  "id": 2,
-                  "brandId": 1,
-                  "brandName": "A",
-                  "categoryId": 2,
-                  "categoryName": "아우터",
-                  "price": 5500
-                },
-                ...
+                  "products": [
+                    {
+                      "id": 1,
+                      "brandId": 1,
+                      "brandName": "A",
+                      "categoryId": 1,
+                      "categoryName": "상의",
+                      "price": 11200
+                    },
+                    {
+                      "id": 2,
+                      "brandId": 1,
+                      "brandName": "A",
+                      "categoryId": 2,
+                      "categoryName": "아우터",
+                      "price": 5500
+                    },
+                ]
             }
         ```
 #### 3. 상품 수정
@@ -111,7 +111,7 @@
 - **Request Body**:
   ```json
   {
-    "name": test1,
+    "name": "test1",
   }
 - **Response**:
     - **Status Code**: `200 Ok`
