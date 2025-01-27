@@ -1,6 +1,6 @@
 package com.musinsa.musinsacodingassignment.brand.exception
 
-import com.musinsa.musinsacodingassignment.common.code.BaseErrorCode
+import com.musinsa.musinsacodingassignment.common.exception.BaseErrorCode
 import org.springframework.http.HttpStatus
 
 enum class BrandErrorCode(

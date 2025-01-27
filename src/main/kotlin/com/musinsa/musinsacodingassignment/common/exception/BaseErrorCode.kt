@@ -1,4 +1,4 @@
-package com.musinsa.musinsacodingassignment.common.code
+package com.musinsa.musinsacodingassignment.common.exception
 
 import org.springframework.http.HttpStatus
 
