@@ -70,7 +70,7 @@
     - **Response Body**:
         ```json
             {
-            "id": 10
+                "id": 10
             }
         ```
 #### 2. 상품 조회
@@ -106,7 +106,7 @@
 - **Method**: `PATCH`
 - **PathVariable**:
     ```json
-    id: 1
+    "id": 1
     ```
 - **Request Body**:
   ```json
@@ -128,7 +128,7 @@
 - **Request Body**:
     - **PathVariable**
         ```json
-        id: 1
+        "id": 1
         ```
 - **Response**:
     - **Status Code**: `204 No Content`
