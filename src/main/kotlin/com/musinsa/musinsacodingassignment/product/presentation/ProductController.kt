@@ -7,6 +7,7 @@ import com.musinsa.musinsacodingassignment.product.presentation.dto.request.toUp
 import com.musinsa.musinsacodingassignment.product.presentation.dto.response.*
 import com.musinsa.musinsacodingassignment.product.service.ProductInquiryService
 import com.musinsa.musinsacodingassignment.product.service.ProductService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -26,7 +27,7 @@ class ProductController(
 
     @PostMapping
     fun createProduct(
-        @RequestBody request: CreateProductRequest
+        @Valid @RequestBody request: CreateProductRequest
     ): ResponseEntity<CreateProductResponse> {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(productService.createProduct(request.toCreateProductVO()).toCreateProductResponse())

@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -43,6 +44,7 @@ class CategoryServiceTest {
     fun `updateCategory should update and return CategoryVO`() {
         val updateCategoryVO = UpdateCategoryVO(id = 1, name = "Updated Category")
         val categoryEntity = updateCategoryVO.toEntity()
+        whenever(categoryRepository.findById(updateCategoryVO.id)).thenReturn(Optional.of(categoryEntity))
         whenever(categoryRepository.save(any<CategoryEntity>())).thenReturn(categoryEntity)
 
         val result = categoryService.updateCategory(updateCategoryVO)

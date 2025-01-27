@@ -1,12 +1,13 @@
 package com.musinsa.musinsacodingassignment.product.presentation.dto.request
 
 import com.musinsa.musinsacodingassignment.product.service.vo.UpdateProductVO
+import jakarta.validation.constraints.NotNull
 
 
 data class UpdateProductRequest(
-    val brandId: Long,
-    val categoryId: Long,
-    val price: Int
+    @field:NotNull val brandId: Long,
+    @field:NotNull val categoryId: Long,
+    @field:NotNull val price: Int
 )
 
 fun UpdateProductRequest.toUpdateProductVO(id: Long) = UpdateProductVO(

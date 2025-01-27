@@ -2,9 +2,9 @@ package com.musinsa.musinsacodingassignment.product.service
 
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
+import com.musinsa.musinsacodingassignment.common.exception.NotFoundException
 import com.musinsa.musinsacodingassignment.product.entity.toVO
 import com.musinsa.musinsacodingassignment.product.exception.ProductErrorCode
-import com.musinsa.musinsacodingassignment.product.exception.ProductException
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
 import com.musinsa.musinsacodingassignment.product.service.vo.CreateProductVO
 import com.musinsa.musinsacodingassignment.product.service.vo.ProductVO
@@ -54,12 +54,12 @@ class ProductService(
     }
 
     private fun findProductById(id: Long) = productRepository.findByIdOrNull(id)
-        ?: throw ProductException(ProductErrorCode.PRODUCT_NOT_FOUND)
+        ?: throw NotFoundException(ProductErrorCode.PRODUCT_NOT_FOUND)
 
     private fun findBrandById(brandId: Long) = brandRepository.findByIdOrNull(brandId)
-        ?: throw ProductException(ProductErrorCode.BRAND_NOT_FOUND)
+        ?: throw NotFoundException(ProductErrorCode.BRAND_NOT_FOUND)
 
     private fun findCategoryById(categoryId: Long) = categoryRepository.findByIdOrNull(categoryId)
-        ?: throw ProductException(ProductErrorCode.CATEGORY_NOT_FOUND)
+        ?: throw NotFoundException(ProductErrorCode.CATEGORY_NOT_FOUND)
 
 }

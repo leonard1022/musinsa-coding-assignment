@@ -19,3 +19,6 @@ spring:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
+  mvc:
+    problemdetails:
+      enabled: true

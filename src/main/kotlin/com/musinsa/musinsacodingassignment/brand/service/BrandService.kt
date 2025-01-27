@@ -3,12 +3,12 @@ package com.musinsa.musinsacodingassignment.brand.service
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
 import com.musinsa.musinsacodingassignment.brand.entity.toVO
 import com.musinsa.musinsacodingassignment.brand.exception.BrandErrorCode
-import com.musinsa.musinsacodingassignment.brand.exception.BrandException
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.brand.service.vo.BrandVO
 import com.musinsa.musinsacodingassignment.brand.service.vo.CreateBrandVO
 import com.musinsa.musinsacodingassignment.brand.service.vo.UpdateBrandVO
 import com.musinsa.musinsacodingassignment.brand.service.vo.toEntity
+import com.musinsa.musinsacodingassignment.common.exception.NotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -40,7 +40,7 @@ class BrandService(
     }
 
     private fun findBrandById(id: Long) = brandRepository.findByIdOrNull(id)
-        ?: throw BrandException(BrandErrorCode.BRAND_NOT_FOUND)
+        ?: throw NotFoundException(BrandErrorCode.BRAND_NOT_FOUND)
 
     private fun saveBrand(brandEntity: BrandEntity): BrandEntity {
         return brandRepository.save(brandEntity)
