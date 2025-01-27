@@ -22,22 +22,54 @@ class ProductInquiryService(
 ) {
 
     fun getLowestPricesByCategory(): List<LowestPricesByCategoryVO> {
-        return productRepository.findAllByDeletedAtIsNull().map { it.toDomain() }.groupBy { it.categoryId }
-            .map { (_, products) ->
-                val minProduct =
-                    products.minByOrNull { it.price }
-                        ?: throw IllegalArgumentException(ProductErrorCode.NO_PRODUCT_FOR_CATEGORY)
-
-                LowestPricesByCategoryVO(
-                    categoryName = minProduct.categoryName, brandName = minProduct.brandName, price = minProduct.price
-                )
+        val allCategories = categoryRepository.findAll()
+            .map { it.toDomain() }
+            .ifEmpty {
+                throw IllegalArgumentException(ProductErrorCode.NO_CATEGORIES)
             }
+
+        val products = productRepository.findAllByDeletedAtIsNull()
+            .map { it.toDomain() }
+            .ifEmpty {
+                throw IllegalArgumentException(ProductErrorCode.NO_PRODUCTS_AVAILABLE)
+            }
+
+        val productsByCategoryId = products.groupBy { it.categoryId }
+
+        allCategories.forEach { category ->
+            if (!productsByCategoryId.containsKey(category.id)) {
+                throw IllegalArgumentException(ProductErrorCode.NO_PRODUCT_FOR_CATEGORY)
+            }
+        }
+
+        return productsByCategoryId.map { (_, productsInCategory) ->
+            val minProduct = productsInCategory.minByOrNull { it.price }
+                ?: throw IllegalArgumentException(ProductErrorCode.NO_PRODUCT_FOR_CATEGORY)
+
+            LowestPricesByCategoryVO(
+                categoryName = minProduct.categoryName,
+                brandName = minProduct.brandName,
+                price = minProduct.price
+            )
+        }
     }
 
     fun getLowestSingleBrand(): LowestSingleBrandVO {
-        val brands = brandRepository.findAll().map { it.toDomain() }
-        val categories = categoryRepository.findAll().map { it.toDomain() }
-        val allProducts = productRepository.findAllByDeletedAtIsNull().map { it.toDomain() }
+        val brands = brandRepository.findAll()
+            .map { it.toDomain() }
+            .ifEmpty {
+                throw IllegalStateException(ProductErrorCode.NO_BRANDS)
+            }
+        val categories = categoryRepository.findAll()
+            .map { it.toDomain() }
+            .ifEmpty {
+                throw IllegalStateException(ProductErrorCode.NO_CATEGORIES)
+            }
+        val allProducts = productRepository.findAllByDeletedAtIsNull()
+            .map { it.toDomain() }
+            .ifEmpty {
+                throw IllegalStateException(ProductErrorCode.NO_PRODUCTS_AVAILABLE)
+            }
 
         val productsByBrandAndCategory = allProducts.groupBy { it.brandName to it.categoryName }
 
@@ -55,9 +87,8 @@ class ProductInquiryService(
             )
         }
 
-        val lowestSingleBrand =
-            brandTotals.minByOrNull { it.totalPrice }
-                ?: throw IllegalStateException(ProductErrorCode.PRODUCT_NOT_FOUND)
+        val lowestSingleBrand = brandTotals.minByOrNull { it.totalPrice }
+            ?: throw IllegalStateException(ProductErrorCode.PRODUCT_NOT_FOUND)
 
         return LowestSingleBrandVO(
             brandName = lowestSingleBrand.brandName,
