@@ -151,6 +151,7 @@ class ProductControllerIntegrationTest(
     }
 
     @Test
+    @Order(8)
     @DisplayName("8) getLowestPricesByCategory - 카테고리별 최저가 상품을 조회할 수 있다.")
     @Transactional
     fun testGetLowestPricesByCategory() {
@@ -174,6 +175,7 @@ class ProductControllerIntegrationTest(
     }
 
     @Test
+    @Order(9)
     @DisplayName("9) getLowestSingleBrand - 단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품가격, 총액을 조회할 수 있다.")
     @Transactional
     fun testGetLowestSingleBrand() {
@@ -204,6 +206,7 @@ class ProductControllerIntegrationTest(
     }
 
     @Test
+    @Order(10)
     @DisplayName("10) getMinMaxPriceByCategory - 카테고리별 최저가, 최고가 상품을 조회할 수 있다.")
     @Transactional
     fun testGetMinMaxPriceByCategory() {
