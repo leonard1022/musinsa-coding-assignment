@@ -1,10 +1,8 @@
 package com.musinsa.musinsacodingassignment.brand.presentation
 
-import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.brand.service.BrandService
 import com.musinsa.musinsacodingassignment.brand.service.vo.CreateBrandVO
 import com.musinsa.musinsacodingassignment.brand.service.vo.UpdateBrandVO
-import com.musinsa.musinsacodingassignment.common.exception.NotFoundException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,9 +14,6 @@ import org.springframework.test.annotation.Rollback
 class BrandControllerIntegrationTest(
     @Autowired
     private val brandService: BrandService,
-
-    @Autowired
-    private val brandRepository: BrandRepository
 ) {
     @Test
     @Order(1)
