@@ -20,7 +20,7 @@ class ProductEntity(
     var category: CategoryEntity,
 
     @Column(nullable = false)
-    val price: Int
+    var price: Int
 ) : BaseEntity() {
     constructor(id: Long, brandEntity: BrandEntity, categoryEntity: CategoryEntity, price: Int) : this(
         brandEntity,
@@ -48,3 +48,11 @@ fun ProductEntity.toVO() = ProductVO(
     categoryName = this.category.name,
     price = this.price
 )
+
+fun Product.toEntity(brandEntity: BrandEntity, categoryEntity: CategoryEntity) = ProductEntity(
+    brand = brandEntity,
+    category = categoryEntity,
+    price = this.price
+).apply {
+    this.id = this@toEntity.id
+}

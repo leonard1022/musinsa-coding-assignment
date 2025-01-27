@@ -30,3 +30,8 @@ fun CategoryEntity.toVO() = CategoryVO(
     id = this.id,
     name = this.name,
 )
+
+fun Category.toEntity() = CategoryEntity(
+    id = this.id,
+    name = this.name
+)
