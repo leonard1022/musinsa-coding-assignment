@@ -29,7 +29,8 @@ class BrandService(
 
     @Transactional
     fun updateBrand(vo: UpdateBrandVO): BrandVO {
-        val brandEntity = findBrandById(vo.id)
+        findBrandById(vo.id)
+        val brandEntity = vo.toEntity()
         return saveBrand(brandEntity).toVO()
     }
 
