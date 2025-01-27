@@ -4,9 +4,11 @@ import com.musinsa.musinsacodingassignment.brand.entity.toDomain
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.category.entity.toDomain
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
+import com.musinsa.musinsacodingassignment.common.exception.IllegalArgumentException
+import com.musinsa.musinsacodingassignment.common.exception.IllegalStateException
+import com.musinsa.musinsacodingassignment.common.exception.NotFoundException
 import com.musinsa.musinsacodingassignment.product.entity.toDomain
 import com.musinsa.musinsacodingassignment.product.exception.ProductErrorCode
-import com.musinsa.musinsacodingassignment.product.exception.ProductException
 import com.musinsa.musinsacodingassignment.product.presentation.dto.response.BrandCategoryPrice
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
 import com.musinsa.musinsacodingassignment.product.service.vo.*
@@ -23,7 +25,8 @@ class ProductInquiryService(
         return productRepository.findAllByDeletedAtIsNull().map { it.toDomain() }.groupBy { it.categoryId }
             .map { (_, products) ->
                 val minProduct =
-                    products.minByOrNull { it.price } ?: throw IllegalStateException("No products found for a category")
+                    products.minByOrNull { it.price }
+                        ?: throw IllegalArgumentException(ProductErrorCode.NO_PRODUCT_FOR_CATEGORY)
 
                 LowestPricesByCategoryVO(
                     categoryName = minProduct.categoryName, brandName = minProduct.brandName, price = minProduct.price
@@ -53,7 +56,8 @@ class ProductInquiryService(
         }
 
         val lowestSingleBrand =
-            brandTotals.minByOrNull { it.totalPrice } ?: throw IllegalStateException("No products found")
+            brandTotals.minByOrNull { it.totalPrice }
+                ?: throw IllegalStateException(ProductErrorCode.PRODUCT_NOT_FOUND)
 
         return LowestSingleBrandVO(
             brandName = lowestSingleBrand.brandName,
@@ -64,7 +68,7 @@ class ProductInquiryService(
 
     fun getMinMaxPriceByCategory(categoryName: String): MinMaxPriceByCategoryVO {
         val categoryEntity = categoryRepository.findByName(categoryName)
-            ?: throw ProductException(ProductErrorCode.CATEGORY_NOT_FOUND)
+            ?: throw NotFoundException(ProductErrorCode.CATEGORY_NOT_FOUND)
 
         val products = productRepository.findAllByCategoryAndDeletedAtIsNull(categoryEntity).map { it.toDomain() }
         val category = categoryEntity.toDomain()
