@@ -1,12 +1,13 @@
 package com.musinsa.musinsacodingassignment.brand.presentation.dto.request
 
-import com.musinsa.musinsacodingassignment.brand.domain.Brand
+import com.musinsa.musinsacodingassignment.brand.service.vo.UpdateBrandVO
+import jakarta.validation.constraints.NotBlank
 
 data class UpdateBrandRequest(
-    val name: String
+    @NotBlank val name: String
 )
 
-fun UpdateBrandRequest.toBrand(id: Long) = Brand(
+fun UpdateBrandRequest.toVO(id: Long) = UpdateBrandVO(
     id = id,
     name = this.name,
 )

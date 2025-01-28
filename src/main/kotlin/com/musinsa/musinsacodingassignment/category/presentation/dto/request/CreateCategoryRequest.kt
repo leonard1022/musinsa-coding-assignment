@@ -1,12 +1,14 @@
 package com.musinsa.musinsacodingassignment.category.presentation.dto.request
 
-import com.musinsa.musinsacodingassignment.category.domain.Category
+import com.musinsa.musinsacodingassignment.category.service.vo.CreateCategoryVO
+import jakarta.validation.constraints.NotBlank
 
 data class CreateCategoryRequest(
-    val name: String
+    @NotBlank val name: String
 )
 
-fun CreateCategoryRequest.toCategory() = Category(
-    id = 0,
-    name = this.name,
+
+fun CreateCategoryRequest.toVO() = CreateCategoryVO(
+    name = this.name
 )
+

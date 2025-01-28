@@ -1,7 +1,7 @@
 package com.musinsa.musinsacodingassignment.product.repository
 
 import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
-import com.musinsa.musinsacodingassignment.brand.entity.CategoryEntity
+import com.musinsa.musinsacodingassignment.category.entity.CategoryEntity
 import com.musinsa.musinsacodingassignment.brand.repository.BrandRepository
 import com.musinsa.musinsacodingassignment.category.repository.CategoryRepository
 import com.musinsa.musinsacodingassignment.product.entity.ProductEntity
@@ -36,9 +36,9 @@ class ProductRepositoryTest {
         val brandEntity = brandRepository.save(brand)
         val categoryEntity = categoryRepository.save(category)
 
-        val product1 = ProductEntity(id = 1L, brand = brandEntity, category = categoryEntity, price = 1000)
-        val product2 = ProductEntity(id = 2L, brand = brandEntity, category = categoryEntity, price = 2000)
-        val product3 = ProductEntity(id = 3L, brand = brandEntity, category = categoryEntity, price = 3000)
+        val product1 = ProductEntity(brand = brandEntity, category = categoryEntity, price = 1000)
+        val product2 = ProductEntity(brand = brandEntity, category = categoryEntity, price = 2000)
+        val product3 = ProductEntity(brand = brandEntity, category = categoryEntity, price = 3000)
         productRepository.saveAll(listOf(product1, product2, product3))
 
         // when
@@ -47,5 +47,4 @@ class ProductRepositoryTest {
         // then
         assertEquals(3, result.size)
     }
-
 }

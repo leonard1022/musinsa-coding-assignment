@@ -1,12 +1,11 @@
 package com.musinsa.musinsacodingassignment.brand.presentation.dto.response
 
-import com.musinsa.musinsacodingassignment.brand.domain.Brand
-import com.musinsa.musinsacodingassignment.brand.entity.BrandEntity
+import com.musinsa.musinsacodingassignment.brand.service.vo.BrandVO
 
 data class CreateBrandResponse(
     val id: Long
 )
 
-fun Brand.toCreateBrandResponse() = CreateBrandResponse(
-    id = this.id!!
+fun BrandVO.toCreateBrandResponse() = CreateBrandResponse(
+    id = this.id
 )
