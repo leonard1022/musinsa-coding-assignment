@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,10 +25,9 @@ class ProductControllerIntegrationTest(
 ) {
 
     @Test
-    @Order(1)
     @DisplayName("1) createProduct - 상품을 생성하면 DB에 저장된다.")
-    @Rollback(false)
     @Transactional
+    @DirtiesContext
     fun testCreateProduct() {
         // Given
         val createProductVO = CreateProductVO(brandId = 1, categoryId = 1, price = 1000)
@@ -46,10 +46,13 @@ class ProductControllerIntegrationTest(
     }
 
     @Test
-    @Order(2)
     @DisplayName("2) getProducts - 생성된 상품 목록을 조회할 수 있다.")
     @Transactional
     fun testGetProducts() {
+        // Given
+        val createProductVO = CreateProductVO(brandId = 1, categoryId = 1, price = 1000)
+        productService.createProduct(createProductVO)
+
         // When
         val products = productService.getProducts()
 
@@ -59,14 +62,11 @@ class ProductControllerIntegrationTest(
     }
 
     @Test
-    @Order(3)
     @DisplayName("3) updateProduct - 상품을 수정하면 변경 사항이 DB에 반영된다.")
-    @Rollback(false)
     @Transactional
     fun testUpdateProduct() {
         // Given
-        val existingProduct =
-            productService.getProducts().first { it.brandId == 1L && it.categoryId == 1L && it.price == 1000 }
+        val existingProduct = productService.getProduct(1L)
         val updateVO = UpdateProductVO(
             id = existingProduct.id,
             brandId = 2,
@@ -84,32 +84,11 @@ class ProductControllerIntegrationTest(
     }
 
     @Test
-    @Order(4)
-    @DisplayName("5) getProduct - 상품을 조회할 수 있다.")
-    @Transactional
-    fun testGetProduct() {
-        // Given
-        val existingProduct =
-            productService.getProducts().first { it.brandId == 2L && it.categoryId == 2L && it.price == 2000 }
-
-        // When
-        val product = productService.getProduct(existingProduct.id)
-
-        // Then
-        assertEquals(2L, product.brandId)
-        assertEquals(2L, product.categoryId)
-        assertEquals(2000, product.price)
-    }
-
-    @Test
-    @Order(5)
     @DisplayName("4) deleteProduct - 상품을 삭제하면 더 이상 조회되지 않는다.")
-    @Rollback(false)
     @Transactional
     fun testDeleteProduct() {
         // Given
-        val existingProduct =
-            productService.getProducts().first { it.brandId == 2L && it.categoryId == 2L && it.price == 2000 }
+        val existingProduct = productService.getProduct(1L)
 
         // When
         productService.deleteProduct(existingProduct.id)
@@ -121,7 +100,22 @@ class ProductControllerIntegrationTest(
     }
 
     @Test
-    @Order(6)
+    @DisplayName("5) getProduct - 상품을 조회할 수 있다.")
+    @Transactional
+    fun testGetProduct() {
+        // Given
+        val existingProduct = productService.getProduct(1L)
+
+        // When
+        val product = productService.getProduct(existingProduct.id)
+
+        // Then
+        assertEquals(1, product.brandId)
+        assertEquals(1, product.categoryId)
+        assertEquals(11200, product.price)
+    }
+
+    @Test
     @DisplayName("6) getProduct - 존재하지 않는 상품을 조회하면 NotFoundException이 발생한다.")
     @Transactional
     fun testGetProductWithNonExistingProduct() {
@@ -132,7 +126,6 @@ class ProductControllerIntegrationTest(
     }
 
     @Test
-    @Order(7)
     @DisplayName("7) updateProduct - 존재하지 않는 상품을 수정하면 NotFoundException이 발생한다.")
     @Transactional
     fun testUpdateProductWithNonExistingProduct() {
@@ -151,62 +144,61 @@ class ProductControllerIntegrationTest(
     }
 
     @Test
-    @Order(8)
     @DisplayName("8) getLowestPricesByCategory - 카테고리별 최저가 상품을 조회할 수 있다.")
     @Transactional
     fun testGetLowestPricesByCategory() {
         // Given
-        val createProductVO1 = CreateProductVO(brandId = 1, categoryId = 1, price = 1000)
-        val createProductVO2 = CreateProductVO(brandId = 1, categoryId = 1, price = 2000)
-        val createProductVO3 = CreateProductVO(brandId = 1, categoryId = 2, price = 3000)
-        val createProductVO4 = CreateProductVO(brandId = 1, categoryId = 2, price = 4000)
-        productService.createProduct(createProductVO1)
-        productService.createProduct(createProductVO2)
-        productService.createProduct(createProductVO3)
-        productService.createProduct(createProductVO4)
+        // Data is already inserted in the database
 
         // When
         val lowestPricesByCategory = productInquiryService.getLowestPricesByCategory()
 
         // Then
-        assertEquals("상의", lowestPricesByCategory[0].categoryName)
-        assertEquals("A", lowestPricesByCategory[0].brandName)
-        assertEquals(1000, lowestPricesByCategory[0].price)
+        assertEquals(8, lowestPricesByCategory.size)
+        val category1 = lowestPricesByCategory.find { it.categoryName == "상의" }
+        val category2 = lowestPricesByCategory.find { it.categoryName == "아우터" }
+        val category3 = lowestPricesByCategory.find { it.categoryName == "바지" }
+        val category4 = lowestPricesByCategory.find { it.categoryName == "스니커즈" }
+        val category5 = lowestPricesByCategory.find { it.categoryName == "가방" }
+        val category6 = lowestPricesByCategory.find { it.categoryName == "모자" }
+        val category7 = lowestPricesByCategory.find { it.categoryName == "양말" }
+        val category8 = lowestPricesByCategory.find { it.categoryName == "액세서리" }
+
+        assertNotNull(category1)
+        assertNotNull(category2)
+        assertNotNull(category3)
+        assertNotNull(category4)
+        assertNotNull(category5)
+        assertNotNull(category6)
+        assertNotNull(category7)
+        assertNotNull(category8)
+
+        assertEquals(10000, category1?.price)
+        assertEquals(5000, category2?.price)
+        assertEquals(3000, category3?.price)
+        assertEquals(9000, category4?.price)
+        assertEquals(2000, category5?.price)
+        assertEquals(1500, category6?.price)
+        assertEquals(1700, category7?.price)
+        assertEquals(1900, category8?.price)
     }
 
     @Test
-    @Order(9)
     @DisplayName("9) getLowestSingleBrand - 단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품가격, 총액을 조회할 수 있다.")
     @Transactional
     fun testGetLowestSingleBrand() {
         // Given
-        val createProductVO1 = CreateProductVO(brandId = 1, categoryId = 1, price = 100)
-        val createProductVO2 = CreateProductVO(brandId = 1, categoryId = 2, price = 200)
-        val createProductVO3 = CreateProductVO(brandId = 1, categoryId = 3, price = 300)
-        val createProductVO4 = CreateProductVO(brandId = 1, categoryId = 4, price = 400)
-        val createProductVO5 = CreateProductVO(brandId = 1, categoryId = 5, price = 100)
-        val createProductVO6 = CreateProductVO(brandId = 1, categoryId = 6, price = 200)
-        val createProductVO7 = CreateProductVO(brandId = 1, categoryId = 7, price = 300)
-        val createProductVO8 = CreateProductVO(brandId = 1, categoryId = 8, price = 400)
-        productService.createProduct(createProductVO1)
-        productService.createProduct(createProductVO2)
-        productService.createProduct(createProductVO3)
-        productService.createProduct(createProductVO4)
-        productService.createProduct(createProductVO5)
-        productService.createProduct(createProductVO6)
-        productService.createProduct(createProductVO7)
-        productService.createProduct(createProductVO8)
+        // Data is already inserted in the database
 
         // When
         val lowestSingleBrand = productInquiryService.getLowestSingleBrand()
 
         // Then
-        assertEquals("A", lowestSingleBrand.brandName)
-        assertEquals(2000, lowestSingleBrand.totalPrice)
+        assertEquals("D", lowestSingleBrand.brandName)
+        assertEquals(36100, lowestSingleBrand.totalPrice)
     }
 
     @Test
-    @Order(10)
     @DisplayName("10) getMinMaxPriceByCategory - 카테고리별 최저가, 최고가 상품을 조회할 수 있다.")
     @Transactional
     fun testGetMinMaxPriceByCategory() {
