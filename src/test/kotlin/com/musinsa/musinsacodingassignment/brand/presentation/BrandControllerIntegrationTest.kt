@@ -16,9 +16,7 @@ class BrandControllerIntegrationTest(
     private val brandService: BrandService,
 ) {
     @Test
-    @Order(1)
     @DisplayName("1) createBrand - 브랜드를 생성하면 DB에 저장된다.")
-    @Rollback(false)
     fun testCreateBrand() {
         // Given
         val createBrandVO = CreateBrandVO(name = "TestBrand")
@@ -35,7 +33,6 @@ class BrandControllerIntegrationTest(
     }
 
     @Test
-    @Order(2)
     @DisplayName("2) getBrands - 생성된 브랜드 목록을 조회할 수 있다.")
     fun testGetBrands() {
         // When
@@ -47,11 +44,10 @@ class BrandControllerIntegrationTest(
     }
 
     @Test
-    @Order(3)
     @DisplayName("3) updateBrand - 브랜드를 수정하면 변경 사항이 DB에 반영된다.")
     fun testUpdateBrand() {
         // Given
-        val existingBrand = brandService.getBrands().first() { it.name == "TestBrand" }
+        val existingBrand = brandService.getBrand(1L)
         val updateVO = UpdateBrandVO(
             id = existingBrand.id,
             name = "UpdatedBrand"
@@ -61,20 +57,19 @@ class BrandControllerIntegrationTest(
         val updated = updateVO.let { brandService.updateBrand(it) }
 
         // Then
-        existingBrand.let { updated.let { it1 -> assertEquals(it.id, it1.id) } }
+        assertEquals(existingBrand.id, updated.id)
         assertEquals("UpdatedBrand", updated.name)
 
-        val found = brandService.getBrands().firstOrNull { it.id == (existingBrand.id ?: 0) }
+        val found = brandService.getBrands().firstOrNull { it.id == existingBrand.id }
         assertNotNull(found)
         assertEquals("UpdatedBrand", found!!.name)
     }
 
     @Test
-    @Order(4)
     @DisplayName("4) deleteBrand - 브랜드를 삭제하면 더 이상 조회되지 않는다.")
     fun testDeleteBrand() {
         // Given
-        val existingBrand = brandService.getBrands().first { it.name == "UpdatedBrand" }
+        val existingBrand = brandService.getBrand(1L)
 
         // When
         brandService.deleteBrand(existingBrand.id)
