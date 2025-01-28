@@ -10,12 +10,30 @@
 - Gradle
 - H2 Database (테스트용)
 
+## 아키텍처
+- 실제로 서비스를 할 경우 현재 구현한 프로젝트로는 한계가 있음을 인지하고 있습니다.
+- 전체적인 구현은 하지 못하였으며 처음 생각한 아키텍처는 다음과 같습니다.
+
+![architecture](./architecture.png)
+### 설명
+- **Client**: 사용자가 상품을 조회, 생성, 수정, 삭제할 수 있는 클라이언트
+- **Server**: Client의 요청을 처리하는 서버
+- **Redis**: 상품 정보를 캐싱하는 서버
+- **RDB**: 상품 정보를 저장하는 서버
+- **Message Broker**: 생성, 수정 및 삭제 요청에 대한 이벤트를 처리하는 Message Broker
+- **Worker**: Message Broker로부터 데이터를 수신하여 가공하는 서버
+- **Elastic Search**: Logstash/Filebeat으로부터 데이터를 수집하여 저장하는 서버
+
+### 고려한 사항
+- 수십만 건 이상의 상품 정보를 실시간으로 조회하는 것은 성능에 부담이 될 수 있습니다.
+- 따라서 상품 정보를 캐싱하여 빠르게 조회할 수 있는 구조를 생각했습니다.
+
 ## 프로젝트 구조
 - `entity`: 데이터베이스 엔티티 클래스
 - `repository`: 데이터베이스 접근을 위한 리포지토리 인터페이스
 - `service`: 비즈니스 로직을 처리하는 서비스 클래스
 - `vo`: 값 객체 (Value Object) 클래스
-- `controller`: HTTP 요청을 처리하는 컨트롤러 클래스
+- `presentation`: HTTP 요청을 처리하는 컨트롤러 클래스
 - `dto`: 데이터 전송 객체
 - `exception`: 커스텀 예외 클래스
 
