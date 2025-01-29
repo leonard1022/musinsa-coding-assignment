@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
 
 interface BrandRepository : JpaRepository<BrandEntity, Long> {
-    fun findByName(name: String): BrandEntity?
 
     fun findAllByDeletedAtIsNull(): List<BrandEntity>
 
