@@ -18,11 +18,13 @@ class BrandService(
     private val brandRepository: BrandRepository
 ) {
 
+    @Transactional(readOnly = true)
     fun getBrand(id: Long): BrandVO {
         return brandRepository.findByIdOrNull(id)?.toVO()
             ?: throw NotFoundException(BrandErrorCode.BRAND_NOT_FOUND)
     }
 
+    @Transactional(readOnly = true)
     fun getBrands(): List<BrandVO> {
         return brandRepository.findAllByDeletedAtIsNull().map { it.toVO() }
     }
