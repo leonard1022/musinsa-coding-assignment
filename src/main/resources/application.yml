@@ -22,3 +22,12 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+springdoc:
+  packages-to-scan: com.musinsa.musinsacodingassignment
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    path: /swagger-ui
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
