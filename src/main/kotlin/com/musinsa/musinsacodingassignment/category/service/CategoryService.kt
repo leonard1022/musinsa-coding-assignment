@@ -17,6 +17,7 @@ class CategoryService(
     private val categoryRepository: CategoryRepository
 ) {
 
+    @Transactional(readOnly = true)
     fun getCategories(): List<CategoryVO> {
         return categoryRepository.findAll().map { it.toVO() }
     }

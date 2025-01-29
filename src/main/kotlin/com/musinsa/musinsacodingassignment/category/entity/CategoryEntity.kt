@@ -8,7 +8,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "Categories")
+@Table(name = "categories")
 class CategoryEntity(
     @Column(nullable = false, unique = true)
     val name: String
