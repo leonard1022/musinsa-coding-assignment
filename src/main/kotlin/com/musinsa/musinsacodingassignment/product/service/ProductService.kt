@@ -28,11 +28,13 @@ class ProductService(
     private val productRepository: ProductRepository
 ) {
 
+    @Transactional(readOnly = true)
     fun getProduct(id: Long): ProductVO {
         return productRepository.findByIdAndDeletedAtIsNull(id)?.toVO()
             ?: throw NotFoundException(ProductErrorCode.PRODUCT_NOT_FOUND)
     }
 
+    @Transactional(readOnly = true)
     fun getProducts(): List<ProductVO> {
         return productRepository.findAllByDeletedAtIsNull().map {
             it.toVO()
