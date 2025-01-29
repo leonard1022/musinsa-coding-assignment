@@ -13,6 +13,7 @@ import com.musinsa.musinsacodingassignment.product.presentation.dto.response.Bra
 import com.musinsa.musinsacodingassignment.product.repository.ProductRepository
 import com.musinsa.musinsacodingassignment.product.service.vo.*
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ProductInquiryService(
@@ -21,6 +22,7 @@ class ProductInquiryService(
     private val productRepository: ProductRepository
 ) {
 
+    @Transactional(readOnly = true)
     fun getLowestPricesByCategory(): List<LowestPricesByCategoryVO> {
         val allCategories = categoryRepository.findAll()
             .map { it.toDomain() }
@@ -54,6 +56,7 @@ class ProductInquiryService(
         }
     }
 
+    @Transactional(readOnly = true)
     fun getLowestSingleBrand(): LowestSingleBrandVO {
         val brands = brandRepository.findAll()
             .map { it.toDomain() }
@@ -97,6 +100,7 @@ class ProductInquiryService(
         )
     }
 
+    @Transactional(readOnly = true)
     fun getMinMaxPriceByCategory(categoryName: String): MinMaxPriceByCategoryVO {
         val categoryEntity = categoryRepository.findByName(categoryName)
             ?: throw NotFoundException(ProductErrorCode.CATEGORY_NOT_FOUND)
