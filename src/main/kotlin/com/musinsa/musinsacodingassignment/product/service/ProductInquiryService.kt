@@ -124,8 +124,7 @@ class ProductInquiryService(
         val maxPriceProducts = products
             .filter {
                 it.price == maxPrice
-            }
-            .map {
+            }.map {
                 BrandPrice(
                     brand = it.brandName,
                     price = it.price
